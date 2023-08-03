@@ -1,17 +1,16 @@
-import React, {useState} from 'react';
-import classes from './Counter.module.scss';
+import React, {FC, useState} from 'react';
 
-const Counter = () => {
-    const [count, setCount] = useState(0);
-
-    const increment = () => {
-        setCount(count + 1);
+export interface CounterPropsType {
+    color: string
+}
+const Counter :FC<CounterPropsType> = ({color}) => {
+    const [counter, setCounter] = useState(0)
+    const clickHandler = () =>{
+        setCounter(prev => prev+1)
     }
-
     return (
-        <div className={classes.btn}>
-            <h1>{count}</h1>
-            <button onClick={increment}>increment</button>
+        <div style={{color}}>
+            <h1 onClick={clickHandler}>{counter}</h1>
         </div>
     );
 };

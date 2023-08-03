@@ -13,14 +13,15 @@ export function buildWebpackConfig(options: BuildOptions): webpack.Configuration
         mode: mode,
         entry: paths.entry,
         output: {
-            filename: "[name].[contenthash].js",
+            filename: "index.js",
             path: paths.build,
             libraryTarget: "umd",
             clean: true
         },
-        // externals: {
-        //     react: isDev? '': "react"
-        // },
+        externals: {
+            react: "react",
+            "react-dom": "react-dom",
+        },
         plugins: buildPlugins(options),
         module: {
             rules: buildLoaders(options),
