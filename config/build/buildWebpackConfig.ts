@@ -15,8 +15,12 @@ export function buildWebpackConfig(options: BuildOptions): webpack.Configuration
         output: {
             filename: "[name].[contenthash].js",
             path: paths.build,
+            libraryTarget: "umd",
             clean: true
         },
+        // externals: {
+        //     react: isDev? '': "react"
+        // },
         plugins: buildPlugins(options),
         module: {
             rules: buildLoaders(options),
