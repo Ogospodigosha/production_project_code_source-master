@@ -1,0 +1,35 @@
+@mixin template-layout() {
+  position: relative;
+  //box-shadow: $input-shadow;
+  border-radius: 5px;
+  background: #FFF;
+  width: 100%;
+
+}
+
+.wrapper-layout {
+  @include template-layout;
+  display: flex;
+  justify-content: center;
+  -webkit-justify-content: center;
+  align-items: flex-start;
+  -webkit-align-items: flex-start;
+  flex-wrap: wrap;
+  overflow: hidden;
+  padding: 16px;
+}
+.wrapper-without-layout {
+  display: flex;
+  justify-content: center;
+  -webkit-justify-content: center;
+  align-items: flex-start;
+  -webkit-align-items: flex-start;
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  transition: all .5s;
+  -webkit-transition: all .5s;
+  -moz-transition: all .5s;
+  -o-transition: all .5s;
+  overflow: hidden;
+}
+/////////////////////////////////media
