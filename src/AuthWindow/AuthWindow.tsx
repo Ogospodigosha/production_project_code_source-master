@@ -3,6 +3,7 @@ import {AuthApi} from "../api/AuthApi";
 import useCounter from "../store/store";
 import s from '../Notification/Notification.module.scss'
 import Wrapper from "../Layouts/Wrapper";
+import {Prompt} from "../components/Prompt/Prompt";
 const AuthWindow = () => {
     const [phone, setPhone] = useState('')
     const [code, setCode] = useState('')
@@ -49,6 +50,10 @@ const AuthWindow = () => {
                     <div className={s['notification-close-first-line']}/>
                     <div className={s['notification-close-second-line']}/>
                 </div>
+                <Prompt
+                    title={'Укажите ваш номер телефона для отправки заявки'}
+                    titleStyle={{textAlign: 'center'}}
+                />
             </Wrapper>
         </div>
     );

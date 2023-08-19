@@ -1,0 +1,32 @@
+.header-24 {
+  font-family: "HelveticaNeueCyr", sans-serif, normal;
+  color: rgba(28,28,30,1);
+  line-height: 1;
+  font-size: 24px;
+  margin: 0;
+  width: 100%;
+  font-weight: 500;
+}
+@media screen and (max-width: 1040px) and (min-width: 768px) {
+  .header-26, .header-30 {
+    font-size: 24px
+  }
+
+.description-20 {
+  font-size: 17px
+}
+
+  .description-18 {
+    font-size: 16px
+  }
+
+  .header-24 {
+    font-size: 20px
+  }
+
+}
+@media screen and (max-width:768px - 1px) {
+  .header-24 {
+    font-size: 15px;
+  }
+}
