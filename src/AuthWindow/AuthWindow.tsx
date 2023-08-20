@@ -4,25 +4,27 @@ import useCounter from "../store/store";
 import s from '../Notification/Notification.module.scss'
 import Wrapper from "../Layouts/Wrapper";
 import {Prompt} from "../components/Prompt/Prompt";
+import {FormInput} from "../components/FormInput/OtherInputs";
+
 const AuthWindow = () => {
     const [phone, setPhone] = useState('')
     const [code, setCode] = useState('')
     const token = useCounter(state => state.counter)
     const setToken = useCounter(state => state.setToken)
-    const changeHandlerPhone =(e: ChangeEvent<HTMLInputElement>) =>{
+    const changeHandlerPhone = (e: ChangeEvent<HTMLInputElement>) => {
         setPhone(e.currentTarget.value)
     }
-    const changeHandlerCode = (e: ChangeEvent<HTMLInputElement>) =>{
+    const changeHandlerCode = (e: ChangeEvent<HTMLInputElement>) => {
         setCode(e.currentTarget.value)
     }
-    const clickHandlerPhone =() =>{
+    const clickHandlerPhone = () => {
         AuthApi.signIn({phone})
     }
-    const clickHandlerGetToken = () =>{
-         AuthApi.confirmCode({code: Number(code), phone: phone}).then(res =>{
-             console.log(res.data.token)
-             setToken(res.data.token)
-       })
+    const clickHandlerGetToken = () => {
+        AuthApi.confirmCode({code: Number(code), phone: phone}).then(res => {
+            console.log(res.data.token)
+            setToken(res.data.token)
+        })
     }
     return (
         // <>
@@ -46,14 +48,36 @@ const AuthWindow = () => {
                     boxShadow: '0px 0px 100px rgba(0,0,0,.4)'
                 }}
             >
-                <div onClick={() =>{}} className={s['notification-close']}>
+                <div onClick={() => {
+                }} className={s['notification-close']}>
                     <div className={s['notification-close-first-line']}/>
                     <div className={s['notification-close-second-line']}/>
                 </div>
-                <Prompt
-                    title={'Укажите ваш номер телефона для отправки заявки'}
-                    titleStyle={{textAlign: 'center'}}
-                />
+                <div style={{maxWidth: '100%'}}>
+                    <Prompt
+                        title={'Укажите ваш номер телефона для отправки заявки'}
+                        titleStyle={{textAlign: 'center'}}
+                    />
+                    <FormInput
+                        currentDomain={'sovbank'}
+                        inputStyle={{background: 'rgba(3, 49, 140, 0.12)', padding: 10}}
+                        mask={'+7-(999)-999-99-99'}
+                        alwaysShowMask={true}
+                        containerStyle={{marginTop: 20}}
+                        labelStyle={{textAlign: 'center'}}
+                        defaultValue={localStorage.getItem('phoneNumber') ? localStorage.getItem('phoneNumber') : ''}
+                        animationEffect={'fade-up'}
+                        onChange={() => {
+                        }}
+                        readOnly={false}
+                        errorMessage={''}
+                        status={true}
+                        required={true}
+                        inputMode='tel'
+                        maskedHandler={() => {
+                        }}
+                    />
+                </div>
             </Wrapper>
         </div>
     );

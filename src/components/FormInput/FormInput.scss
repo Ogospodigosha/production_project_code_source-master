@@ -1,0 +1,29 @@
+.input, .input__onbank, .input__sovbank, .input__sop, .input__kk_sobank,
+.input__first_credit, .input__kkd_sobank, .input__cc_sobank, .input__new_sobank{
+  position: relative;
+  width: 100% !important;
+  outline: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-family: "Tahoma", sans-serif;
+  box-shadow: 0 2px 6px rgba(38, 53, 104, 0.25);
+  border: 0;
+  height: 50px;
+  color: rgba(100, 100, 100, 0.9);
+  font-size: 16px;
+  overflow: hidden;
+  overflow-y: scroll;
+  perspective: 200px;
+  padding-left: 8px;
+  transition: background-color 0.3s;
+  box-sizing: border-box;
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  width: 100%;
+  align-content: flex-start;
+}
