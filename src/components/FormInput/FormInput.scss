@@ -27,3 +27,8 @@
   width: 100%;
   align-content: flex-start;
 }
+.input:focus, .input__onbank:focus, .input__sovbank:focus, .input__sop:focus, .input__kk_sobank:focus,
+.input__first_credit:focus, .input__kkd_sobank:focus, .input__cc_sobank:focus, .input__new_sobank:focus {
+  border: 2px solid rgb(90, 90, 90) !important;
+  background-color: #FFFFFF !important;
+}
