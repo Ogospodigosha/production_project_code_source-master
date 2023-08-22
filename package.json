@@ -1,6 +1,6 @@
 {
   "name": "goshadostalo15package",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "",
   "main": "./build/index.js",
   "scripts": {
@@ -40,9 +40,11 @@
   ],
   "dependencies": {
     "@types/react-input-mask": "^3.0.0",
+    "@types/react-router-dom": "^5.1.7",
     "axios": "^1.4.0",
     "immer": "^9.0.21",
     "react-input-mask": "^2.0.4",
+    "react-router-dom": "^5.2.0",
     "zustand": "^4.1.5"
   }
 }

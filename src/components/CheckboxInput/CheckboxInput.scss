@@ -1,0 +1,44 @@
+.checkbox {
+  position: relative;
+  display: block;
+  min-width: 15px;
+  min-height: 15px;
+  max-width: 15px;
+  max-height: 15px;
+  flex-shrink: 1;
+  margin-right: 20px;
+  background: url("../../Assets/icons/empty_accept.svg") no-repeat center;
+  background-size: contain;
+}
+.agreement-text {
+  font-family: "Tahoma", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1;
+  color:  rgba(3, 49, 140, 0.75);
+}
+.span-error {
+  font-family: "HelveticaNeueCyr", sans-serif, normal;
+  font-size: 12px;
+  color: rgba(232, 48, 56, 0.99);
+  font-weight: 700;
+  display: block;
+  margin-top: 5px;
+  padding: 8px;
+}
+
+.agreement-text-decoration {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.checkbox.checked {
+  background: url("../../Assets/icons/accept.svg") no-repeat center
+}
+.checkbox-container {
+  display: flex;
+  width: 100%;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+}
