@@ -3,6 +3,7 @@ import useUser from "../store/userStore";
 import {checkPhone, resetMask} from "../utils/utils";
 import {authSignIn} from "../request/authSignIn";
 import {AuthApi} from "../api/AuthApi";
+import userStore from "../store/userStore";
 export const initialStateValid = {
     valid: false,
     message: '',
@@ -16,6 +17,8 @@ export const useModal = () => {
     const setPhoneNumber = useUser(state => state.setPhoneNumber)
     const phoneNumber = useUser(state => state.phoneNumber)
     const [countClickResendSms, setCountClickResendSms] = useState(0);
+    const setSmsLoader = userStore(store => store.setSmsLoader)
+    const loader = userStore(store => store.loader)
     useEffect(() =>{
         debugger
         if (!!intervalId) return;
@@ -26,7 +29,7 @@ export const useModal = () => {
             if(localStorage.getItem('phoneNumberFromState') === valid.value) {
                 return
             }
-            authSignIn(valid.value, intervalId)
+            authSignIn(valid.value, intervalId, setSmsLoader, loader)
             // AuthApi.signIn({phone: valid.value})
 
             //////////////////////////////////////////////////

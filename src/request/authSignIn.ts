@@ -1,10 +1,13 @@
 import {AuthApi} from "../api/AuthApi";
+import userStore from "../store/userStore";
 
-export const authSignIn =  async(phone: string, intervalId: any) => {
+export const authSignIn =  async(phone: string, intervalId: any, setSmsLoader:(loader: boolean)=>void, loader:boolean) => {
     debugger
     try {
         debugger
         await AuthApi.signIn({phone})
+        setSmsLoader(true)
+        console.log(loader)
         // await dispatch(setSmsLoader(true))
         // dispatch(setPhoneNumber(phone));
         // dispatch(setAuthType('BASIC_SMS'));

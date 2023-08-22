@@ -22,6 +22,7 @@ const AuthWindow = () => {
     const phoneChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPhoneNumber(e.target.value)
     };
+    console.log(window.location.search)
     useEffect(() => {
         // if (!!authTypeEnv) {
         //     modal.checkInputPartner(unmaskedPhoneNumber, birthDateStatus)
