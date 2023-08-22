@@ -26,6 +26,11 @@ const AuthWindow = () => {
     const phoneChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPhoneNumber(e.target.value)
     };
+    const codeChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (resetMask(e.target.value).length === 4 || resetMask(e.target.value).length === 0) {
+            modal.checkCode(e)
+        }
+    };
 
     useEffect(() => {
         // if (!!authTypeEnv) {
@@ -165,7 +170,7 @@ const AuthWindow = () => {
                                 autoFocus
                                 autoComplete={'one-time-code'}
                                 id={"single-factor-code-text-field"}
-                                onInput={()=>{}}         //codeChangeHandler
+                                onInput={codeChangeHandler}         //codeChangeHandler
                             />
 
                             {/*{codeMessage ? (*/}

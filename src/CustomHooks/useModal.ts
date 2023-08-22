@@ -4,6 +4,7 @@ import {checkPhone, resetMask} from "../utils/utils";
 import {authSignIn} from "../request/authSignIn";
 import {AuthApi} from "../api/AuthApi";
 import userStore from "../store/userStore";
+import {confirmCode} from "../request/confirmCode";
 export const initialStateValid = {
     valid: false,
     message: '',
@@ -17,6 +18,7 @@ export const useModal = () => {
     const setPhoneNumber = useUser(state => state.setPhoneNumber)
     const phoneNumber = useUser(state => state.phoneNumber)
     const [countClickResendSms, setCountClickResendSms] = useState(0);
+    const [sendingCode, setSendingCode] = useState(false);
     const setSmsLoader = userStore(store => store.setSmsLoader)
     const loader = userStore(store => store.loader)
     useEffect(() =>{
@@ -53,6 +55,24 @@ export const useModal = () => {
         return () => clearInterval(intervalId)
     },[valid])
 
+    const checkCode = (value: string) => {
+        const phone = valid.value || phoneNumber || ''
+        if (resetMask(value).length === 4) {
+            setSendingCode(true)
+
+            // const callback = href ? () => {
+            //     history.push(href)
+            // } : undefined
+            confirmCode(phone, Number(resetMask(value)), intervalId)
+            // if (type === 'BASIC_SMS') dispatch(confirmCode(phone, Number(resetMask(value)), intervalId, callback))
+            // else dispatch(confirmMobileId(phone, resetMask(value),  intervalId, callback));
+            // setSendingCode(false)
+
+
+        } else {
+            // dispatch(setCodeMessage(''))
+        }
+    }
     const checkInput = (value: string) => {
         if (resetMask(value).length === 11) {
             setValid(checkPhone(
@@ -71,6 +91,7 @@ export const useModal = () => {
         checkInput: (value: string) => checkInput(value),
         valid,
         defaultPhone:  phoneNumber || '',
+        checkCode: (e: React.ChangeEvent<HTMLInputElement>) => checkCode(e.target.value),
     }
 }
 
