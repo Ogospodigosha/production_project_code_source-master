@@ -1,0 +1,49 @@
+.document-text {
+  font-family: "Tahoma", sans-serif;
+  font-size: 14px;
+  color: rgba(100, 100, 100, .9);
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+@media screen and (max-width: 767px) {
+  .document-text {
+    font-size: 12px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+}
+.label, .textarea {
+  font-family: Tahoma,sans-serif;
+  font-weight: 400;
+  width: 100%;
+
+}
+
+.label {
+  color: #000;
+  display: block;
+  font-size: 16px;
+  line-height: 17px;
+  margin-left: 8px;
+  white-space: pre-wrap;
+  margin-bottom: 5px;
+}
+
+
+.link-color {
+  color: rgba(24, 144, 255, .7);
+  //font-size: inherit;
+  font-family: inherit;
+}
+.link-action {
+  cursor: pointer
+}
+
+.font-main {
+  font-family: "Tahoma", sans-serif !important
+}
+@media screen and (max-width: 767px) and (min-width: 300px) {
+  .input, .input::placeholder, .label, .selected-item, .text-component {
+    font-size: 13px !important;
+  }
+}

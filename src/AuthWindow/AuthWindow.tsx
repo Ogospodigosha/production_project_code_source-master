@@ -2,6 +2,7 @@ import React, {ChangeEvent, useEffect, useState} from 'react';
 import {AuthApi} from "../api/AuthApi";
 import useCounter from "../store/store";
 import s from '../Notification/Notification.module.scss'
+import './AuthWindow.scss'
 import Wrapper from "../Layouts/Wrapper";
 import {Prompt} from "../components/Prompt/Prompt";
 import {FormInput} from "../components/FormInput/OtherInputs";
@@ -10,11 +11,14 @@ import {onPhoneInput, resetMask} from "../utils/utils";
 import {useModal} from "../CustomHooks/useModal";
 import useUser from "../store/userStore";
 import {CheckboxInput} from "../components/CheckboxInput/CheckboxInput";
+import userStore from "../store/userStore";
 
 const AuthWindow = () => {
     const isDesktop = useConfig(state => state.isDesktop)
     const [phoneNumber, setPhoneNumber] = useState<string | null>(localStorage.getItem('phoneNumber') || '');
     const phoneNumberFromState = useUser(state => state.phoneNumber)|| localStorage.getItem('phoneNumberFromState');
+    const loader = userStore(store => store.loader)
+    const labelTextAuth = 'Введите код подтверждения из СМС';
     console.log(phoneNumberFromState)
     const unmaskedPhoneNumber = resetMask(phoneNumber);
     console.log(phoneNumber)
@@ -22,7 +26,7 @@ const AuthWindow = () => {
     const phoneChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPhoneNumber(e.target.value)
     };
-    console.log(window.location.search)
+
     useEffect(() => {
         // if (!!authTypeEnv) {
         //     modal.checkInputPartner(unmaskedPhoneNumber, birthDateStatus)
@@ -134,6 +138,75 @@ const AuthWindow = () => {
                             width: '100%'
                         }}
                     /> : ''}
+
+
+                    {loader || (modal.defaultPhone.length === 11) ? (
+
+                        <>
+                            { modal.defaultPhone.length === 11 ||phoneNumberFromState && phoneNumberFromState.length===11 ? (
+
+                                <p className={'document-text link-color link-action font-main'}  //modal.changePhone
+                                   onClick={()=>{}}>
+                                    Изменить номер телефона
+                                </p>
+
+                            ) : ''}
+
+                            <FormInput
+                                currentDomain={'sovbank'}
+                                containerStyle={{marginTop: 20}}
+                                inputStyle={{textAlign: 'center', padding: 10, letterSpacing: 5}}
+                                placeholder={'____'}
+                                labelStyle={{textAlign: 'center'}}
+                                maxLength={4}
+                                animationEffect={'zoom-up'}
+                                labelText={labelTextAuth} //labelTextAuth
+                                inputType={'one-time-code'}
+                                autoFocus
+                                autoComplete={'one-time-code'}
+                                id={"single-factor-code-text-field"}
+                                onInput={()=>{}}         //codeChangeHandler
+                            />
+
+                            {/*{codeMessage ? (*/}
+                            {/*    <p className={'span-error font-main'}>*/}
+                            {/*        Вы ввели неправильный код. {modal.showCodeMessage && modal.timer === 0 ? <span*/}
+                            {/*        onClick={modal.updateCode}*/}
+                            {/*        className={'link-action'}>Нажмите сюда, чтобы отправить код повторно.</span> : ''}*/}
+                            {/*    </p>*/}
+                            {/*) : !codeMessage && modal.timer > 0 && modal.timer < 55 ? (*/}
+                            {/*    <p className={'document-text link-color font-main'}>*/}
+                            {/*        Не пришел код? Запросите повторно через <span*/}
+                            {/*        style={{whiteSpace: 'nowrap'}}>{setTextTimer(modal.timer)}</span>*/}
+                            {/*    </p>*/}
+                            {/*) : !codeMessage && modal.timer === 0 && modal.countClickResendSms < 2 ? (*/}
+                            {/*    <p className={'document-text link-color link-action font-main'}*/}
+                            {/*       onClick={modal.updateCode} style={{cursor: 'pointer'}}>*/}
+                            {/*        Отправить код повторно*/}
+                            {/*    </p>*/}
+                            {/*) : ''}*/}
+
+                            <CheckboxInput
+                                required={true}
+                                state={true}
+                                path={'123'}
+                                secondPath={'123'}
+                                target={'_blank'}
+                                rel={'noopener noreferer'}
+                                setState={() => {
+                                }}
+                                id={'agreement_document'}
+                                containerId={'container_agreement_document'}
+                                containerStyle={{
+                                    marginTop: 20,
+                                    width: '100%'
+                                }}
+                            />
+
+                        </>
+
+                    ) : ''}
+
                 </div>
             </Wrapper>
         </div>

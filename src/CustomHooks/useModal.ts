@@ -70,6 +70,7 @@ export const useModal = () => {
     return {
         checkInput: (value: string) => checkInput(value),
         valid,
+        defaultPhone:  phoneNumber || '',
     }
 }
 
