@@ -1,7 +1,8 @@
 import React from "react";
 import {CSSProperties} from "react";
-import {NavLink} from 'react-router-dom'
+
 import './CheckboxInput.scss'
+
 export interface UniversalTypes {
     fullGrid?: boolean
 }
@@ -37,6 +38,8 @@ export const CheckboxInput: React.FC<CheckboxInputPropsType> = ({
                                                                     containerStyle
                                                                 }) => {
     return (
+        <>
+
         <div className="input-container" id={containerId} style={containerStyle}
              data-full-grid={fullGrid ? 'true' : ''}>
             <div className="checkbox-container">
@@ -45,7 +48,7 @@ export const CheckboxInput: React.FC<CheckboxInputPropsType> = ({
                     onClick={() => setState(!state)}
                 />
                 <span className={'agreement-text'}>
-                    Я {path ? <a href={'/pdf_/agreement'} target={target} rel={rel}
+                    Я {path ? <a href={'/pdf_agreement'} target={target} rel={rel}
                                        className={'agreement-text-decoration'}>{'соглашаюсь'}</a> : <span
                     className={'agreement-text'}>{'соглашаюсь'}</span>} на обработку моих персональных данных и с условиями {secondPath ?
                     <a href={`/pdf_/offer`} target={target} rel={rel}
@@ -57,5 +60,6 @@ export const CheckboxInput: React.FC<CheckboxInputPropsType> = ({
             </div>
             {!state && required && message ? <span className="span-error">{message}</span> : ''}
         </div>
+        </>
     )
 }

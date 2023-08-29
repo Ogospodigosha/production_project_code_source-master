@@ -1,6 +1,4 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
-import {AuthApi} from "../api/AuthApi";
-import useCounter from "../store/store";
+import React, {useEffect, useState} from 'react';
 import s from '../Notification/Notification.module.scss'
 import './AuthWindow.scss'
 import Wrapper from "../Layouts/Wrapper";
@@ -12,9 +10,12 @@ import {useModal} from "../CustomHooks/useModal";
 import useUser from "../store/userStore";
 import {CheckboxInput} from "../components/CheckboxInput/CheckboxInput";
 import userStore from "../store/userStore";
+import useAuthWindow from "../store/authModalStore";
 
 const AuthWindow = () => {
     const isDesktop = useConfig(state => state.isDesktop)
+    const setViewModal = useAuthWindow(state => state.setViewModal)
+    const view = useAuthWindow(state => state.view)
     const [phoneNumber, setPhoneNumber] = useState<string | null>(localStorage.getItem('phoneNumber') || '');
     const phoneNumberFromState = useUser(state => state.phoneNumber)|| localStorage.getItem('phoneNumberFromState');
     const loader = userStore(store => store.loader)
@@ -23,6 +24,7 @@ const AuthWindow = () => {
     const unmaskedPhoneNumber = resetMask(phoneNumber);
     console.log(phoneNumber)
     const modal = useModal()
+    console.log(view)
     const phoneChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPhoneNumber(e.target.value)
     };
@@ -51,6 +53,7 @@ const AuthWindow = () => {
         }
 
     },[phoneNumberFromState, phoneNumber])
+
     // useEffect(() =>{
     //     if (phoneNumber === '+7-(911)-777-07-26') {
     //         AuthApi.signIn({phone:'79117770726'})
@@ -78,17 +81,19 @@ const AuthWindow = () => {
     //     })
     // }
     return (
-        // <>
-        // <div>
-        //     <input value={phone} onChange={changeHandlerPhone}/>
-        //     <button onClick={clickHandlerPhone}>Отправить номер телефона для получения кода</button>
-        // </div>
-        //     <div>
-        //         <input value={phone} onChange={changeHandlerPhone}/>
-        //         <input value={code} onChange={changeHandlerCode}/>
-        //         <button onClick={clickHandlerGetToken}>Отправить номер и код телефона для получения токена</button>
-        //     </div>
-        // </>
+        <>
+
+        {/*// <>*/}
+        {/*// <div>*/}
+        {/*//     <input value={phone} onChange={changeHandlerPhone}/>*/}
+        {/*//     <button onClick={clickHandlerPhone}>Отправить номер телефона для получения кода</button>*/}
+        {/*// </div>*/}
+        {/*//     <div>*/}
+        {/*//         <input value={phone} onChange={changeHandlerPhone}/>*/}
+        {/*//         <input value={code} onChange={changeHandlerCode}/>*/}
+        {/*//         <button onClick={clickHandlerGetToken}>Отправить номер и код телефона для получения токена</button>*/}
+        {/*//     </div>*/}
+        {/*// </>*/}
         <div className={s['modal-container']} style={{
             perspective: 2000,
             display: location.pathname.includes('/pdf_/agreement') ? 'none' : 'flex'
@@ -99,8 +104,7 @@ const AuthWindow = () => {
                     boxShadow: '0px 0px 100px rgba(0,0,0,.4)'
                 }}
             >
-                <div onClick={() => {
-                }} className={s['notification-close']}>
+                <div onClick={() => setViewModal(false)} className={s['notification-close']}>
                     <div className={s['notification-close-first-line']}/>
                     <div className={s['notification-close-second-line']}/>
                 </div>
@@ -215,6 +219,7 @@ const AuthWindow = () => {
                 </div>
             </Wrapper>
         </div>
+        </>
     );
 };
 

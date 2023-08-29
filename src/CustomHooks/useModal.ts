@@ -2,9 +2,9 @@ import {useEffect, useState} from "react";
 import useUser from "../store/userStore";
 import {checkPhone, resetMask} from "../utils/utils";
 import {authSignIn} from "../request/authSignIn";
-import {AuthApi} from "../api/AuthApi";
 import userStore from "../store/userStore";
 import {confirmCode} from "../request/confirmCode";
+import useAuthWindow from "../store/authModalStore";
 export const initialStateValid = {
     valid: false,
     message: '',
@@ -21,6 +21,25 @@ export const useModal = () => {
     const [sendingCode, setSendingCode] = useState(false);
     const setSmsLoader = userStore(store => store.setSmsLoader)
     const loader = userStore(store => store.loader)
+    const setViewModal = useAuthWindow(state => state.setViewModal)
+
+    useEffect(() => {
+        document.addEventListener('click', outputClickHandler)
+        return () => {
+            document.removeEventListener('click', outputClickHandler)
+            clearInterval(intervalId)
+            // clearModal()
+        }
+    }, [])
+
+    const outputClickHandler = (e: MouseEvent) => {
+        const target = e.target as Element
+        if (target && target.className === 'modal-container') {
+            // dispatch(showModal(false, {}))
+            setViewModal(false)
+        }
+    }
+
     useEffect(() =>{
         debugger
         if (!!intervalId) return;
