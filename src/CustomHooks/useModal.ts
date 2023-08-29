@@ -5,6 +5,7 @@ import {authSignIn} from "../request/authSignIn";
 import userStore from "../store/userStore";
 import {confirmCode} from "../request/confirmCode";
 import useAuthWindow from "../store/authModalStore";
+import s from '../Notification/Notification.module.scss'
 export const initialStateValid = {
     valid: false,
     message: '',
@@ -34,7 +35,7 @@ export const useModal = () => {
 
     const outputClickHandler = (e: MouseEvent) => {
         const target = e.target as Element
-        if (target && target.className === 'modal-container') {
+        if (target && target.className === s['modal-container']) {
             // dispatch(showModal(false, {}))
             setViewModal(false)
         }
