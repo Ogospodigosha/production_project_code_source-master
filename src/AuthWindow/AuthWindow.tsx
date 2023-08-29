@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import s from '../Notification/Notification.module.scss'
 import './AuthWindow.scss'
+import '../styles/index.scss'
 import Wrapper from "../Layouts/Wrapper";
 import {Prompt} from "../components/Prompt/Prompt";
 import {FormInput} from "../components/FormInput/OtherInputs";
@@ -11,14 +12,21 @@ import useUser from "../store/userStore";
 import {CheckboxInput} from "../components/CheckboxInput/CheckboxInput";
 import userStore from "../store/userStore";
 import useAuthWindow from "../store/authModalStore";
+import {Theme, ThemeContext} from "../theme/ThemeContext";
+import {useTheme} from "../theme/useTheme";
+
+
+
 
 const AuthWindow = () => {
+    const {theme, toggleTheme} = useTheme() //хук можно использовать в любом компоненте
     const isDesktop = useConfig(state => state.isDesktop)
     const setViewModal = useAuthWindow(state => state.setViewModal)
     const view = useAuthWindow(state => state.view)
     const [phoneNumber, setPhoneNumber] = useState<string | null>(localStorage.getItem('phoneNumber') || '');
     const phoneNumberFromState = useUser(state => state.phoneNumber)|| localStorage.getItem('phoneNumberFromState');
     const loader = userStore(store => store.loader)
+
     const labelTextAuth = 'Введите код подтверждения из СМС';
     console.log(phoneNumberFromState)
     const unmaskedPhoneNumber = resetMask(phoneNumber);
@@ -104,6 +112,8 @@ const AuthWindow = () => {
                     boxShadow: '0px 0px 100px rgba(0,0,0,.4)'
                 }}
             >
+                <div className={`bla ${theme}`}>1231231231</div>
+                <button onClick={toggleTheme}>TOGGLE</button>
                 <div onClick={() => setViewModal(false)} className={s['notification-close']}>
                     <div className={s['notification-close-first-line']}/>
                     <div className={s['notification-close-second-line']}/>
