@@ -1,10 +1,16 @@
-import React from 'react';
+import React, {FC} from 'react';
 import ThemeProvider from "../theme/ThemeProvider";
 import AuthWindow from "../AuthWindow/AuthWindow";
+import {Theme} from "../theme/ThemeContext";
 
-const TestComponent = () => {
+type PropsType = {
+    currentTheme: Theme
+}
+
+
+const TestComponent: FC<PropsType> = ({currentTheme}) => {
     return (
-        <ThemeProvider>
+        <ThemeProvider currentTheme={currentTheme}>
             <AuthWindow/>
         </ThemeProvider>
     );

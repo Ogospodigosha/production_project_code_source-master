@@ -1,6 +1,6 @@
 {
   "name": "goshadostalo15package",
-  "version": "1.0.25",
+  "version": "1.0.30",
   "description": "",
   "main": "./build/index.js",
   "scripts": {

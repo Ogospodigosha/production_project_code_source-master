@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import s from '../Notification/Notification.module.scss'
 import './AuthWindow.scss'
 import '../styles/index.scss'
@@ -12,14 +12,12 @@ import useUser from "../store/userStore";
 import {CheckboxInput} from "../components/CheckboxInput/CheckboxInput";
 import userStore from "../store/userStore";
 import useAuthWindow from "../store/authModalStore";
-import {Theme, ThemeContext} from "../theme/ThemeContext";
-import {useTheme} from "../theme/useTheme";
 
 
 
 
-const AuthWindow = () => {
-    const {theme, toggleTheme} = useTheme() //хук можно использовать в любом компоненте
+
+const AuthWindow: FC = () => {
     const isDesktop = useConfig(state => state.isDesktop)
     const setViewModal = useAuthWindow(state => state.setViewModal)
     const view = useAuthWindow(state => state.view)
@@ -90,18 +88,6 @@ const AuthWindow = () => {
     // }
     return (
         <>
-
-        {/*// <>*/}
-        {/*// <div>*/}
-        {/*//     <input value={phone} onChange={changeHandlerPhone}/>*/}
-        {/*//     <button onClick={clickHandlerPhone}>Отправить номер телефона для получения кода</button>*/}
-        {/*// </div>*/}
-        {/*//     <div>*/}
-        {/*//         <input value={phone} onChange={changeHandlerPhone}/>*/}
-        {/*//         <input value={code} onChange={changeHandlerCode}/>*/}
-        {/*//         <button onClick={clickHandlerGetToken}>Отправить номер и код телефона для получения токена</button>*/}
-        {/*//     </div>*/}
-        {/*// </>*/}
         <div className={s['modal-container']} style={{
             perspective: 2000,
             display: location.pathname.includes('/pdf_/agreement') ? 'none' : 'flex'
@@ -112,8 +98,6 @@ const AuthWindow = () => {
                     boxShadow: '0px 0px 100px rgba(0,0,0,.4)'
                 }}
             >
-                <div className={`bla ${theme}`}>1231231231</div>
-                <button onClick={toggleTheme}>TOGGLE</button>
                 <div onClick={() => setViewModal(false)} className={s['notification-close']}>
                     <div className={s['notification-close-first-line']}/>
                     <div className={s['notification-close-second-line']}/>

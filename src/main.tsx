@@ -8,7 +8,8 @@ import TestComponent from "./testing/TestComponent";
 
 
 render(
-    <TestComponent/>
+    // <TestComponent/>
+    <></>
 ,
         document.getElementById('root')
 )

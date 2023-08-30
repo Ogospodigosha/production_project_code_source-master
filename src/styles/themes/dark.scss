@@ -1,25 +1,7 @@
 ////стиль для изменения заголовка в модалке
-.bla.dark {
-  --bg-color: blue;
-
+.header-24.dark {
+  //--bg-color: blue;
+  --font-family-main: Consolas, "Times New Roman";
   --primary-color: #049604; //заголовки, тексты, ссылки и тд в форме авторизации
-  --secondary-color: #04ff04;       //обычный текст, параграфы, то на чём не стоит делать акцент
-}
-
-.bla {
-  font-family: "HelveticaNeueCyr", sans-serif, normal;
-  //color: rgba(28,28,30,1); //тот цвет шрифта который должен быть!!!
-  line-height: 1;
-  font-size: 24px;
-  margin: 0;
-  width: 100%;
-  font-weight: 500;
-  background: var(--bg-color);
-  color: var(--primary-color);
-}
-.src-components-Prompt-Prompt-module__header-24.dark {
-  --bg-color: blue;
-
-  --primary-color: #049604; //заголовки, тексты, ссылки и тд в форме авторизации
-  --secondary-color: #04ff04;       //обычный текст, параграфы, то на чём не стоит делать акцент
+  //--secondary-color: #04ff04;       //обычный текст, параграфы, то на чём не стоит делать акцент
 }

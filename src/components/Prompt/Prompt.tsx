@@ -1,6 +1,6 @@
 import React, {CSSProperties, memo, ReactNode, useState} from 'react'
-// import {SubTitleProps, TitleProps} from "../Text/Types/Types";
-import s from './Prompt.module.scss'
+
+import  './Prompt.scss'
 
 import Title from "../Title/Title";
 import Subtitle from "../Subtitle/Subtitle";
@@ -106,7 +106,7 @@ export const Prompt: React.FC<PromptProps> = memo(({
                                                        subtitleTextAlign
                                                    }) => {
     const [state, setState] = useState(true)
-    const {theme, toggleTheme} = useTheme()
+    const {theme} = useTheme()
 
     return (
         <>
@@ -125,7 +125,7 @@ export const Prompt: React.FC<PromptProps> = memo(({
                             // @ts-ignore
                             titleType={titleType}
                             titleRef={titleRef}
-                            titleClassName={titleClassName || `${s['header-24']} ${theme}`}
+                            titleClassName={titleClassName || `header-24 ${theme}`}
                             titleStyle={titleStyle || {}}
                             titlePaddings={titlePaddings}
                             titleMargins={titleMargins}

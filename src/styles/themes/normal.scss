@@ -1,6 +1,6 @@
-.header-24.dark {
-  --bg-color: #e8e8ea;
-
-  --primary-color: #041c65; //заголовки, тексты, ссылки и тд в форме авторизации
-  --secondary-color: #0449e0;       //обычный текст, параграфы, то на чём не стоит делать акцент
+.header-24.light {
+  --primary-color: rgba(28,28,30,1); //заголовки, тексты, ссылки и тд в форме авторизации
+  --font-family-main: "HelveticaNeueCyr", sans-serif, normal;
+  //--secondary-color: #0449e0;       //обычный текст, параграфы, то на чём не стоит делать акцент
+  //--bg-color: #e8e8ea;
 }
