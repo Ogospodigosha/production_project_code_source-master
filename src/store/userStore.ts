@@ -4,7 +4,7 @@ import {Nullable} from "../components/Subtitle/Subtitle";
 
 
 export interface useUserStateType {
-    phoneNumber: Nullable<string>;
+    phoneNumber: string | null;
     loader: boolean
     setPhoneNumber: (phoneNumber: string)=> void
     setSmsLoader: (loader: boolean)=> void

@@ -7,7 +7,7 @@ export const authSignIn =  async(phone: string, intervalId: any, setSmsLoader:(l
         debugger
         await AuthApi.signIn({phone})
         setSmsLoader(true)
-        console.log(loader)
+
         // await dispatch(setSmsLoader(true))
         // dispatch(setPhoneNumber(phone));
         // dispatch(setAuthType('BASIC_SMS'));

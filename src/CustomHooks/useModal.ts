@@ -6,6 +6,7 @@ import userStore from "../store/userStore";
 import {confirmCode} from "../request/confirmCode";
 import useAuthWindow from "../store/authModalStore";
 import s from '../Notification/Notification.module.scss'
+import {AuthApi} from "../api/AuthApi";
 export const initialStateValid = {
     valid: false,
     message: '',
@@ -18,6 +19,7 @@ export const useModal = () => {
     const [intervalId, setIntervalId] = useState<any>();
     const setPhoneNumber = useUser(state => state.setPhoneNumber)
     const phoneNumber = useUser(state => state.phoneNumber)
+
     const [countClickResendSms, setCountClickResendSms] = useState(0);
     const [sendingCode, setSendingCode] = useState(false);
     const setSmsLoader = userStore(store => store.setSmsLoader)
@@ -51,6 +53,7 @@ export const useModal = () => {
             if(localStorage.getItem('phoneNumberFromState') === valid.value) {
                 return
             }
+            debugger
             authSignIn(valid.value, intervalId, setSmsLoader, loader)
             // AuthApi.signIn({phone: valid.value})
 
@@ -107,11 +110,42 @@ export const useModal = () => {
             // dispatch(setSmsLoader(false))
         }
     }
+    const changePhone = async () => {
+        try {
+            await AuthApi.checkChangePhone().then(res =>{
+                // localStorage.removeItem('phoneNumber');
+                // localStorage.setItem('phoneNumber','');
+                localStorage.removeItem('phoneNumberFromState')
+                setPhoneNumber('1')
+                return res;
+            })
+            // setTimer(-1)
+            // setCountClickResendSms(0)
+            // clearInterval(intervalId)
+            // dispatch(setSmsLoader(false))
+            // dispatch(setCodeMessage(null))
+        } catch (err: any) {
+            if (err.response.status === 417) {
+                // dispatch(showModal(false))
+                // dispatch(addNotification('Вы исчерпали лимит смс в сутки, пожалуйста, попробуйте завтра'))
+            } else if (err.response.status === 429) {
+                // dispatch(addNotification('🐶🐱🐹🐭🐰🙈🦆🦀'))
+            } else if (err.response.status === 401) {
+                // dispatch(localLogOut())
+                // dispatch(addNotification('Пожалуйста, авторизуйтесь снова'))
+            } else if (err.response.status === 404) {
+                // history.push('/user/myProfile')
+                // dispatch(addNotification('Пожалуйста, заполните анкету снова'))
+            }
+        }
+    }
+
     return {
         checkInput: (value: string) => checkInput(value),
         valid,
         defaultPhone:  phoneNumber || '',
         checkCode: (e: React.ChangeEvent<HTMLInputElement>) => checkCode(e.target.value),
+        changePhone: () => changePhone(),
     }
 }
 

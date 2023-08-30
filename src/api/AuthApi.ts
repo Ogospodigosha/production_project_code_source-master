@@ -28,4 +28,7 @@ export const AuthApi = {
     async confirmCode(data: IValuesFormConfirmCode) {
         return await instance.post<AuthTokenResponse>(AuthPath.CONFIRM, data)
     },
+    async checkChangePhone() {
+        return await instance.get('api/check_for_change_number')
+    },
 }

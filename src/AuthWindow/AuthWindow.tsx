@@ -26,11 +26,15 @@ const AuthWindow: FC = () => {
     const loader = userStore(store => store.loader)
 
     const labelTextAuth = 'Введите код подтверждения из СМС';
-    console.log(phoneNumberFromState)
+    console.log('phoneNumberFromState', phoneNumberFromState)
+    console.log('phoneNumber', phoneNumber)
+    console.log(localStorage.getItem('phoneNumber'))
+
     const unmaskedPhoneNumber = resetMask(phoneNumber);
-    console.log(phoneNumber)
+
     const modal = useModal()
-    console.log(view)
+    console.log('modal.defaultPhone.length', modal.defaultPhone.length)
+    // console.log(view)
     const phoneChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPhoneNumber(e.target.value)
     };
@@ -39,6 +43,13 @@ const AuthWindow: FC = () => {
             modal.checkCode(e)
         }
     };
+
+    // useEffect(()=>{
+    //     // debugger
+    //     if (localStorage.getItem('phoneNumber') === '') {
+    //         setPhoneNumber(null)
+    //     }
+    // },[localStorage.getItem('phoneNumber'), phoneNumberFromState])
 
     useEffect(() => {
         // if (!!authTypeEnv) {
@@ -59,33 +70,6 @@ const AuthWindow: FC = () => {
         }
 
     },[phoneNumberFromState, phoneNumber])
-
-    // useEffect(() =>{
-    //     if (phoneNumber === '+7-(911)-777-07-26') {
-    //         AuthApi.signIn({phone:'79117770726'})
-    //     }
-    // },[phoneNumber])
-    // const [phone, setPhone] = useState('')
-    // const [code, setCode] = useState('')
-    // const token = useCounter(state => state.counter)
-    // const isDesktop = useConfig(state => state.isDesktop)
-    // console.log(isDesktop)
-    // const setToken = useCounter(state => state.setToken)
-    // const changeHandlerPhone = (e: ChangeEvent<HTMLInputElement>) => {
-    //     setPhone(e.currentTarget.value)
-    // }
-    // const changeHandlerCode = (e: ChangeEvent<HTMLInputElement>) => {
-    //     setCode(e.currentTarget.value)
-    // }
-    // const clickHandlerPhone = () => {
-    //     AuthApi.signIn({phone})
-    // }
-    // const clickHandlerGetToken = () => {
-    //     AuthApi.confirmCode({code: Number(code), phone: phone}).then(res => {
-    //         console.log(res.data.token)
-    //         setToken(res.data.token)
-    //     })
-    // }
     return (
         <>
         <div className={s['modal-container']} style={{
@@ -125,7 +109,7 @@ const AuthWindow: FC = () => {
                         maskedHandler={onPhoneInput}
                     />
 
-                    {phoneNumberFromState=== null && phoneNumber!==null ? !/^[^_]+$/.test(phoneNumber) && <CheckboxInput
+                    {phoneNumberFromState=== null && phoneNumber!==null  ? !/^[^_]+$/.test(phoneNumber) && <CheckboxInput
                         required={true}
                         state={true}
                         path={'1233'}
@@ -149,7 +133,7 @@ const AuthWindow: FC = () => {
                             { modal.defaultPhone.length === 11 ||phoneNumberFromState && phoneNumberFromState.length===11 ? (
 
                                 <p className={'document-text link-color link-action font-main'}  //modal.changePhone
-                                   onClick={()=>{}}>
+                                   onClick={()=>modal.changePhone()}>
                                     Изменить номер телефона
                                 </p>
 

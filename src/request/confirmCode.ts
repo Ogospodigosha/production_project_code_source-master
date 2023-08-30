@@ -3,10 +3,13 @@ import Cookies from "js-cookie";
 
 export const confirmCode = async (phone: string, code: number, intervalId: any, callback?: () => void) =>{
     try {
-        const response = await AuthApi.confirmCode({code, phone})
+        const response = await AuthApi.confirmCode({code, phone}).then(res =>{
+            localStorage.removeItem('phoneNumber');
+
+            return res;
+        })
 
         Cookies.set('Bearer', response.data.token, {expires : 21});
-        console.log(response.data.token)
         // dispatch(addUser())
         // if (intervalId) {
         //     clearInterval(intervalId)

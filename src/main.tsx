@@ -4,12 +4,13 @@ import {render} from "react-dom";
 import AuthWindow from "./AuthWindow/AuthWindow";
 import ThemeProvider from "./theme/ThemeProvider";
 import TestComponent from "./testing/TestComponent";
+import {Theme} from "./theme/ThemeContext";
 
 
 
 render(
-    // <TestComponent/>
-    <></>
+    <TestComponent currentTheme={'dark' as Theme}/>
+    // <></>
 ,
         document.getElementById('root')
 )
