@@ -15,20 +15,20 @@ const TestComponent: FC<PropsType> = ({currentTheme}) => {
 
     const [ unMountTimer, setUnmountTimer]  = useState(0)
     const [isUnMount, setIsUnmount] = useState(false)
-
-    let id: any;
-    useEffect(() => {
-        if (unMountTimer === 0) return
-        if (isUnMount) {
-            id = setTimeout(() => {
-                setUnmountTimer(unMountTimer - 1)
-            }, 1000)
-        }
-        localStorage.setItem('modal.timer', unMountTimer.toString())
-        return () => {
-            clearTimeout(id)
-        }
-    }, [isUnMount, unMountTimer])
+    //
+    // let id: any;
+    // useEffect(() => {
+    //     if (unMountTimer === 0) return
+    //     if (isUnMount) {
+    //         id = setTimeout(() => {
+    //             setUnmountTimer(unMountTimer - 1)
+    //         }, 1000)
+    //     }
+    //     localStorage.setItem('modal.timer', unMountTimer.toString())
+    //     return () => {
+    //         clearTimeout(id)
+    //     }
+    // }, [isUnMount, unMountTimer])
     return (
         <ThemeProvider currentTheme={currentTheme}>
             <AuthWindow setIsUnmount={setIsUnmount} getTimer={getTimer}/>

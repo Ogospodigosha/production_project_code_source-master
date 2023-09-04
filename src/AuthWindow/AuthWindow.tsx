@@ -29,10 +29,6 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer}) => {
     const loader = userStore(store => store.loader)
     let KEY_PHONE_NUMBER = localStorage.getItem('phoneNumberFromState') || ''
     const labelTextAuth = 'Введите код подтверждения из СМС';
-    console.log('phoneNumberFromState', phoneNumberFromState)
-    console.log('phoneNumber', phoneNumber)
-    console.log(localStorage.getItem('phoneNumber'))
-
     const unmaskedPhoneNumber = resetMask(phoneNumber);
 
     const modal = useModal()
@@ -78,22 +74,24 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer}) => {
 
     },[phoneNumberFromState, phoneNumber, modal.timer])
 
-    console.log('modal.timer', modal.timer)
+
     useEffect(()=>{
-        if ( modal.timer === -1 && Number(localStorage.getItem('modal.timer'))  ) {   //если обновили страницу и в ls лежит таймер - запускаем таймер
+
+        if ( modal.timer === -1 && Number(localStorage.getItem('modal.timer')) && Number(localStorage.getItem('phoneNumberFromState')) !== 1 ) {   //если обновили страницу и в ls лежит таймер - запускаем таймер
+           debugger
             const initValue = Number(localStorage.getItem('modal.timer') as string);
 
             modal.startTimer((Date.now() + initValue * 1000));
         }
     },[modal.timer])
 
-    useEffect(() => {
-        setIsUnmount(false)
-        return () => {
-            getTimer(Number(localStorage.getItem('modal.timer'))  )   //если компонент размонтировался передаем в родительский компонент текущее значение таймера и флаг - маунт/анмаунт компонент
-            setIsUnmount(true)
-        };
-    }, []);
+    // useEffect(() => {
+    //     setIsUnmount(false)
+    //     return () => {
+    //         getTimer(Number(localStorage.getItem('modal.timer'))  )   //если компонент размонтировался передаем в родительский компонент текущее значение таймера и флаг - маунт/анмаунт компонент
+    //         setIsUnmount(true)
+    //     };
+    // }, []);
 
 
     return (

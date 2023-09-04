@@ -7,6 +7,7 @@ import {confirmCode} from "../request/confirmCode";
 import useAuthWindow from "../store/authModalStore";
 import s from '../Notification/Notification.module.scss'
 import {AuthApi} from "../api/AuthApi";
+
 export const initialStateValid = {
     valid: false,
     message: '',
@@ -37,15 +38,11 @@ export const useModal = () => {
         }
     }, [])
 
-    // useEffect(() => {
-    //     if (phone) {
-    //         checkInput(phone)
-    //     }
-    // }, [phone])
-
     useEffect(() => {
         if (timer === 0) {
+            debugger
             setShowCodeMessage(true)
+            setIntervalId(undefined)
             clearInterval(intervalId)
         }
     }, [timer])
@@ -60,6 +57,10 @@ export const useModal = () => {
 
     useEffect(() =>{
         debugger
+        if (timer === 0) {
+            setIntervalId(undefined)
+            clearInterval(intervalId)
+        }
         if (!!intervalId) return;
         if (valid.valid && !valid.message) {
             debugger
@@ -125,6 +126,7 @@ export const useModal = () => {
         }, 1000)
 
         setIntervalId(int)
+
     }
 
     const checkInput = (value: string) => {
@@ -147,12 +149,14 @@ export const useModal = () => {
                 // localStorage.removeItem('phoneNumber');
                 // localStorage.setItem('phoneNumber','');
                 localStorage.removeItem('phoneNumberFromState')
+                setIntervalId(undefined)
+                clearInterval(intervalId)
                 setPhoneNumber('1')
                 return res;
             })
-            // setTimer(-1)
-            // setCountClickResendSms(0)
-            // clearInterval(intervalId)
+            setTimer(-1)
+            setCountClickResendSms(0)
+            clearInterval(intervalId)
             // dispatch(setSmsLoader(false))
             // dispatch(setCodeMessage(null))
         } catch (err: any) {
