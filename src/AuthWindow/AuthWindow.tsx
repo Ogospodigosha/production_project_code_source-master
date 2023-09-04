@@ -27,7 +27,7 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer}) => {
     const [phoneNumber, setPhoneNumber] = useState<string | null>(localStorage.getItem('phoneNumber') || '');
     const phoneNumberFromState = useUser(state => state.phoneNumber)|| localStorage.getItem('phoneNumberFromState');
     const loader = userStore(store => store.loader)
-
+    let KEY_PHONE_NUMBER = localStorage.getItem('phoneNumberFromState') || ''
     const labelTextAuth = 'Введите код подтверждения из СМС';
     console.log('phoneNumberFromState', phoneNumberFromState)
     console.log('phoneNumber', phoneNumber)
@@ -37,6 +37,7 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer}) => {
 
     const modal = useModal()
     console.log('modal.defaultPhone.length', modal.defaultPhone.length)
+
     // console.log(view)
     const phoneChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPhoneNumber(e.target.value)
@@ -46,7 +47,7 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer}) => {
             modal.checkCode(e)
         }
     };
-
+    console.log('modal.defaultPhone.length', modal.defaultPhone.length)
     // useEffect(()=>{
     //     // debugger
     //     if (localStorage.getItem('phoneNumber') === '') {
@@ -152,10 +153,10 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer}) => {
                     /> : ''}
 
 
-                    {loader || (modal.defaultPhone.length === 11) ? (
+                    {loader ||  KEY_PHONE_NUMBER.length === 11  || (modal.defaultPhone.length === 11) ? (
 
                         <>
-                            { modal.defaultPhone.length === 11 ||phoneNumberFromState && phoneNumberFromState.length===11 ? (
+                            { modal.defaultPhone.length === 11 || phoneNumberFromState && phoneNumberFromState.length===11 ? (
 
                                 <p className={'document-text link-color link-action font-main'}  //modal.changePhone
                                    onClick={()=>modal.changePhone()}>
