@@ -19,12 +19,14 @@ export const useModal = () => {
     const [intervalId, setIntervalId] = useState<any>();
     const setPhoneNumber = useUser(state => state.setPhoneNumber)
     const phoneNumber = useUser(state => state.phoneNumber)
-
+    const [timer, setTimer] = useState<number>(-1);
     const [countClickResendSms, setCountClickResendSms] = useState(0);
     const [sendingCode, setSendingCode] = useState(false);
     const setSmsLoader = userStore(store => store.setSmsLoader)
     const loader = userStore(store => store.loader)
     const setViewModal = useAuthWindow(state => state.setViewModal)
+    const [showCodeMessage, setShowCodeMessage] = useState(false);
+    const [showChangePhone, setShowChangePhone] = useState(false);
 
     useEffect(() => {
         document.addEventListener('click', outputClickHandler)
@@ -34,6 +36,19 @@ export const useModal = () => {
             // clearModal()
         }
     }, [])
+
+    // useEffect(() => {
+    //     if (phone) {
+    //         checkInput(phone)
+    //     }
+    // }, [phone])
+
+    useEffect(() => {
+        if (timer === 0) {
+            setShowCodeMessage(true)
+            clearInterval(intervalId)
+        }
+    }, [timer])
 
     const outputClickHandler = (e: MouseEvent) => {
         const target = e.target as Element
@@ -59,7 +74,14 @@ export const useModal = () => {
 
             //////////////////////////////////////////////////
             // dispatch(AppFormActions.updateUserPhone({value: valid.value, touched: true}))
-            // startTimer(Date.now() + 60 * 1000);
+            startTimer(Date.now() + 60 * 1000);
+
+            setTimeout(() => {
+                setShowChangePhone(true)
+            }, 5000)
+            setTimeout(() => {
+                document.getElementById('code__confirm')?.focus()
+            }, 1000)
             //
             // if (authTypeEnv === 'MTS') dispatch(signInMobileId(valid.value, date_birthday.result.value || ''));
             // else dispatch(authSignIn(valid.value, intervalId));
@@ -96,6 +118,15 @@ export const useModal = () => {
             // dispatch(setCodeMessage(''))
         }
     }
+
+    const startTimer = (timestamp: number) => {
+        let int = setInterval(() => {
+            setTimer(Math.round((timestamp / 1000) - (Date.now() / 1000)))
+        }, 1000)
+
+        setIntervalId(int)
+    }
+
     const checkInput = (value: string) => {
         if (resetMask(value).length === 11) {
             setValid(checkPhone(
@@ -140,12 +171,41 @@ export const useModal = () => {
         }
     }
 
+    const updateCode = async () => {
+        try {
+            // const repeat = type === 'BASIC_SMS'
+            //     ? await ServiceApi.startConfirmPhoneNumber(valid.value)
+            //     : await AuthApi.mobileID({phone: valid.value, birthday: date_birthday.result.value || localStorage.getItem('birthday') || ""});
+            const repeat = await  AuthApi.startConfirmPhoneNumber(valid.value)
+            setCountClickResendSms(countClickResendSms + 1)
+            if (repeat.status === 200 || repeat.status === 204) {
+                setShowCodeMessage(false)
+                startTimer(Date.now() + 60 * 1000)
+                return repeat.status >= 200 && repeat.status <= 300
+            } else if (repeat.status === 217) {
+                setShowCodeMessage(false)
+            }
+        } catch (err: any) {
+            if (err.response.status === 403) {
+                // dispatch(addNotification('Смс уже отправлена, дождитесь её'))
+            } else if (err.response.status === 429) {
+                // dispatch(addNotification('🐶🐱🐹🐭🐰🙈🦆🦀'))
+            } else if (err.response.status === 417) {
+                // dispatch(showModal(false))
+                // dispatch(addNotification('Вы исчерпали лимит смс в сутки, пожалуйста, попробуйте завтра'))
+            }
+        }
+    }
     return {
         checkInput: (value: string) => checkInput(value),
         valid,
         defaultPhone:  phoneNumber || '',
         checkCode: (e: React.ChangeEvent<HTMLInputElement>) => checkCode(e.target.value),
         changePhone: () => changePhone(),
+        startTimer,
+        timer,
+        countClickResendSms,
+        updateCode: () => updateCode(),
     }
 }
 

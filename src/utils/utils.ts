@@ -174,3 +174,11 @@ export const checkPhone = (
         return dontTouch('Это поле обязательно для заполнения', required, v, dirty)
     }
 }
+export const setTextTimer = (timer: number) => {
+    if (timer <= 0) return ''
+
+    const minutes = Math.floor(timer / 60)
+    const seconds = Math.floor(timer % 60)
+
+    return `${minutes} ${seconds > 0 ? seconds < 10 ? `: 0${seconds}` : `: ${seconds}` : ': 00'}`
+}

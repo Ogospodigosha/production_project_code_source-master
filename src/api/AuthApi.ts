@@ -31,4 +31,9 @@ export const AuthApi = {
     async checkChangePhone() {
         return await instance.get('api/check_for_change_number')
     },
+    async startConfirmPhoneNumber(phoneNumber: string) {
+        return await instance.post('api/send_sms_to_user', {
+            phone: phoneNumber
+        })
+    }
 }

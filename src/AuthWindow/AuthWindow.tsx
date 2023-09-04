@@ -6,7 +6,7 @@ import Wrapper from "../Layouts/Wrapper";
 import {Prompt} from "../components/Prompt/Prompt";
 import {FormInput} from "../components/FormInput/OtherInputs";
 import useConfig from "../store/configStore";
-import {onPhoneInput, resetMask} from "../utils/utils";
+import {onPhoneInput, resetMask, setTextTimer} from "../utils/utils";
 import {useModal} from "../CustomHooks/useModal";
 import useUser from "../store/userStore";
 import {CheckboxInput} from "../components/CheckboxInput/CheckboxInput";
@@ -14,10 +14,13 @@ import userStore from "../store/userStore";
 import useAuthWindow from "../store/authModalStore";
 
 
+type PropsType = {
+    setIsUnmount: (isUnmount: boolean) =>void
+    getTimer: (timer: number) => void
+}
 
 
-
-const AuthWindow: FC = () => {
+const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer}) => {
     const isDesktop = useConfig(state => state.isDesktop)
     const setViewModal = useAuthWindow(state => state.setViewModal)
     const view = useAuthWindow(state => state.view)
@@ -63,13 +66,35 @@ const AuthWindow: FC = () => {
         //     localStorage.setItem('birthday', birthday)
         //     localStorage.setItem('birthDateStatus', date_birthday.result.status)
         // }
+        if (modal.timer !== -1){
+            localStorage.setItem('modal.timer', String(modal.timer))
+        }
         if (phoneNumber)
             localStorage.setItem('phoneNumber', phoneNumber)
         if(phoneNumberFromState) {
             localStorage.setItem('phoneNumberFromState', phoneNumberFromState)
         }
 
-    },[phoneNumberFromState, phoneNumber])
+    },[phoneNumberFromState, phoneNumber, modal.timer])
+
+    console.log('modal.timer', modal.timer)
+    useEffect(()=>{
+        if ( modal.timer === -1 && Number(localStorage.getItem('modal.timer'))  ) {   //если обновили страницу и в ls лежит таймер - запускаем таймер
+            const initValue = Number(localStorage.getItem('modal.timer') as string);
+
+            modal.startTimer((Date.now() + initValue * 1000));
+        }
+    },[modal.timer])
+
+    useEffect(() => {
+        setIsUnmount(false)
+        return () => {
+            getTimer(Number(localStorage.getItem('modal.timer'))  )   //если компонент размонтировался передаем в родительский компонент текущее значение таймера и флаг - маунт/анмаунт компонент
+            setIsUnmount(true)
+        };
+    }, []);
+
+
     return (
         <>
         <div className={s['modal-container']} style={{
@@ -147,32 +172,24 @@ const AuthWindow: FC = () => {
                                 labelStyle={{textAlign: 'center'}}
                                 maxLength={4}
                                 animationEffect={'zoom-up'}
-                                labelText={labelTextAuth} //labelTextAuth
+                                labelText={labelTextAuth}
                                 inputType={'one-time-code'}
                                 autoFocus
                                 autoComplete={'one-time-code'}
                                 id={"single-factor-code-text-field"}
-                                onInput={codeChangeHandler}         //codeChangeHandler
+                                onInput={codeChangeHandler}
                             />
 
-                            {/*{codeMessage ? (*/}
-                            {/*    <p className={'span-error font-main'}>*/}
-                            {/*        Вы ввели неправильный код. {modal.showCodeMessage && modal.timer === 0 ? <span*/}
-                            {/*        onClick={modal.updateCode}*/}
-                            {/*        className={'link-action'}>Нажмите сюда, чтобы отправить код повторно.</span> : ''}*/}
-                            {/*    </p>*/}
-                            {/*) : !codeMessage && modal.timer > 0 && modal.timer < 55 ? (*/}
-                            {/*    <p className={'document-text link-color font-main'}>*/}
-                            {/*        Не пришел код? Запросите повторно через <span*/}
-                            {/*        style={{whiteSpace: 'nowrap'}}>{setTextTimer(modal.timer)}</span>*/}
-                            {/*    </p>*/}
-                            {/*) : !codeMessage && modal.timer === 0 && modal.countClickResendSms < 2 ? (*/}
-                            {/*    <p className={'document-text link-color link-action font-main'}*/}
-                            {/*       onClick={modal.updateCode} style={{cursor: 'pointer'}}>*/}
-                            {/*        Отправить код повторно*/}
-                            {/*    </p>*/}
-                            {/*) : ''}*/}
-
+                            {modal.timer > 0 && modal.timer < 55 ? (
+                                <p className={'document-text link-color font-main'}>
+                                    Не пришел код? Запросите повторно через <span
+                                    style={{whiteSpace: 'nowrap'}}>{setTextTimer(Number(localStorage.getItem('modal.timer')))}</span>
+                                </p>) : Number(localStorage.getItem('modal.timer')) === 0 && modal.countClickResendSms < 2 ? (
+                                <p className={'document-text link-color link-action font-main'}
+                                   onClick={modal.updateCode} style={{cursor: 'pointer'}}>
+                                    Отправить код повторно
+                                </p>
+                            ) : ''}
                             <CheckboxInput
                                 required={true}
                                 state={true}
