@@ -3,7 +3,7 @@ import {immer} from 'zustand/middleware/immer'
 
 
 export interface useAuthWindowStateType {
-
+    type: string,
     view: boolean,
     href: string | undefined,
     withSms: boolean | undefined,
@@ -16,11 +16,12 @@ export interface useAuthWindowStateType {
         showHypothecModal: boolean
     },
     setViewModal: (view: boolean)=>void
-
+    setAuthType: (type: string)=> void
 }
 
 
 const useAuthWindow = create(immer<useAuthWindowStateType>((set) => ({
+    type: 'BASIC_SMS',
     view: false,
     href: undefined,
     withSms: false,
@@ -37,6 +38,10 @@ const useAuthWindow = create(immer<useAuthWindowStateType>((set) => ({
             state.view = view
         })
     },
-
+    setAuthType: (type: string) => {
+        set(state => {
+            state.type = type
+        })
+    },
 })))
 export default useAuthWindow

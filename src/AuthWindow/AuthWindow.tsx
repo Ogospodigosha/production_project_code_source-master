@@ -6,7 +6,7 @@ import Wrapper from "../Layouts/Wrapper";
 import {Prompt} from "../components/Prompt/Prompt";
 import {FormInput} from "../components/FormInput/OtherInputs";
 import useConfig from "../store/configStore";
-import {onPhoneInput, resetMask, setTextTimer} from "../utils/utils";
+import {onDateInput, onPhoneInput, resetMask, setTextTimer} from "../utils/utils";
 import {useModal} from "../CustomHooks/useModal";
 import useUser from "../store/userStore";
 import {CheckboxInput} from "../components/CheckboxInput/CheckboxInput";
@@ -14,27 +14,47 @@ import userStore from "../store/userStore";
 import useAuthWindow from "../store/authModalStore";
 
 
+
+
 type PropsType = {
     setIsUnmount: (isUnmount: boolean) =>void
     getTimer: (timer: number) => void
+    authTypeProps?: 'MTS_ID' | 'BASIC_SMS'
 }
 
 
-const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer}) => {
+const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer, authTypeProps}) => {
     const isDesktop = useConfig(state => state.isDesktop)
     const setViewModal = useAuthWindow(state => state.setViewModal)
     const view = useAuthWindow(state => state.view)
     const [phoneNumber, setPhoneNumber] = useState<string | null>(localStorage.getItem('phoneNumber') || '');
     const phoneNumberFromState = useUser(state => state.phoneNumber)|| localStorage.getItem('phoneNumberFromState');
+    const setPhoneNumberFromState = useUser(store => store.setPhoneNumber)
     const loader = userStore(store => store.loader)
+    console.log(authTypeProps)
+    const birthDateHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (resetMask(e.target.value).length === 8){
+            setDateBirthday(e.target.value)
+            // setPhoneNumberFromState(unmaskedPhoneNumber)
+        }
+    };
+    const date_birthday = userStore(store => store.date_birthday)
+    // const birthDateStatus =  phoneNumberFromState?.length === 11 && date_birthday.length === 10
+
+    const setDateBirthday = userStore(store => store.setDateBirthday)
+
+    console.log(' phoneNumberFromState?.length===11',  phoneNumberFromState?.length)
+    console.log('date_birthday.length===10', date_birthday.length)
     let KEY_PHONE_NUMBER = localStorage.getItem('phoneNumberFromState') || ''
-    const labelTextAuth = 'Введите код подтверждения из СМС';
+    const labelTextAuth = !!authTypeProps
+        ? 'Вам поступит смс в формате "1234" - Ваш одноразовый код, не сообщайте его никому\nВведите код подтверждения из смс'
+        : 'Введите код подтверждения из СМС';
     const unmaskedPhoneNumber = resetMask(phoneNumber);
-
-    const modal = useModal()
-    console.log('modal.defaultPhone.length', modal.defaultPhone.length)
-
-    // console.log(view)
+    let birthDateStatus =  unmaskedPhoneNumber.length===11 && date_birthday.length===10 ? true: undefined
+    console.log(birthDateStatus)
+    const modal = useModal(authTypeProps)
+    console.log('unmaskedPhoneNumber.length===11', unmaskedPhoneNumber.length===11)
+    console.log('date_birthday.length', date_birthday.length)
     const phoneChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPhoneNumber(e.target.value)
     };
@@ -43,26 +63,19 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer}) => {
             modal.checkCode(e)
         }
     };
-    console.log('modal.defaultPhone.length', modal.defaultPhone.length)
-    // useEffect(()=>{
-    //     // debugger
-    //     if (localStorage.getItem('phoneNumber') === '') {
-    //         setPhoneNumber(null)
-    //     }
-    // },[localStorage.getItem('phoneNumber'), phoneNumberFromState])
 
     useEffect(() => {
-        // if (!!authTypeEnv) {
-        //     modal.checkInputPartner(unmaskedPhoneNumber, birthDateStatus)
-        // }
-        // else
-            modal.checkInput(unmaskedPhoneNumber)
-    },[unmaskedPhoneNumber]);
+        if (!!authTypeProps) {
+            modal.checkInputPartner(unmaskedPhoneNumber, birthDateStatus)
+        }
+        else modal.checkInput(unmaskedPhoneNumber)
+    },[birthDateStatus, unmaskedPhoneNumber, date_birthday]);
+
     useEffect(()=>{
-        // if (!!authTypeEnv && birthday) {
-        //     localStorage.setItem('birthday', birthday)
-        //     localStorage.setItem('birthDateStatus', date_birthday.result.status)
-        // }
+        if (!!authTypeProps && date_birthday) {
+            localStorage.setItem('birthday', date_birthday)
+            // localStorage.setItem('birthDateStatus', date_birthday.result.status)
+        }
         if (modal.timer !== -1){
             localStorage.setItem('modal.timer', String(modal.timer))
         }
@@ -72,7 +85,7 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer}) => {
             localStorage.setItem('phoneNumberFromState', phoneNumberFromState)
         }
 
-    },[phoneNumberFromState, phoneNumber, modal.timer])
+    },[phoneNumberFromState, phoneNumber, modal.timer, date_birthday])
 
 
     useEffect(()=>{
@@ -84,15 +97,6 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer}) => {
             modal.startTimer((Date.now() + initValue * 1000));
         }
     },[modal.timer])
-
-    // useEffect(() => {
-    //     setIsUnmount(false)
-    //     return () => {
-    //         getTimer(Number(localStorage.getItem('modal.timer'))  )   //если компонент размонтировался передаем в родительский компонент текущее значение таймера и флаг - маунт/анмаунт компонент
-    //         setIsUnmount(true)
-    //     };
-    // }, []);
-
 
     return (
         <>
@@ -133,6 +137,31 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer}) => {
                         maskedHandler={onPhoneInput}
                     />
 
+                    {!!authTypeProps && <FormInput
+                        defaultValue={localStorage.getItem('birthday')? localStorage.getItem('birthday'): date_birthday !== 'Invalid date' || date_birthday !== null
+                            ? date_birthday
+                            :  resetMask(date_birthday)}
+                        status={birthDateStatus}
+                        onBlur={birthDateHandler}
+                        onInput={birthDateHandler}
+                        readOnly={birthDateStatus}
+                        currentDomain={'sovbank'}
+                        errorMessage={date_birthday || ''}
+                        mask={'99-99-9999'}
+                        alwaysShowMask
+                        labelText={'Введите дату рождения'}
+                        containerStyle={{marginTop: 20}}
+                        placeholder={'например: 25-09-1972'}
+                        inputStyle={
+                            !birthDateStatus
+                                ? {}
+                                : {background: 'rgba(3, 49, 140, 0.12)', padding: 10}
+                        }
+                        labelStyle={{textAlign: 'center'}}
+                        maskedHandler={onDateInput}
+                    />}
+
+
                     {phoneNumberFromState=== null && phoneNumber!==null  ? !/^[^_]+$/.test(phoneNumber) && <CheckboxInput
                         required={true}
                         state={true}
@@ -151,7 +180,7 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer}) => {
                     /> : ''}
 
 
-                    {loader ||  KEY_PHONE_NUMBER.length === 11  || (modal.defaultPhone.length === 11) ? (
+                    {loader ||  KEY_PHONE_NUMBER.length === 11  || (!!authTypeProps ? modal.defaultPhone.length === 11 && birthDateStatus ||phoneNumberFromState && phoneNumberFromState.length===11 && birthDateStatus : modal.defaultPhone.length === 11) ? (
 
                         <>
                             { modal.defaultPhone.length === 11 || phoneNumberFromState && phoneNumberFromState.length===11 ? (

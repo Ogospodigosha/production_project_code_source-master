@@ -174,6 +174,33 @@ export const checkPhone = (
         return dontTouch('Это поле обязательно для заполнения', required, v, dirty)
     }
 }
+
+export const onDateInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const getValue = () => {
+        if (value === '') return '__-__-____'
+        const arr = value.split('-')
+        if (arr.length !== 3) {
+            if (value[2] !== '-') {
+                return value.substring(-1,1)
+            }
+            if (value[5] !== '-')  {
+                return value.substring(-1,4)
+            }
+        }
+        if (arr[0].length === 3) {
+            const result = arr[0].replace('_','')
+            return [result,arr[1],arr[2]].join('-')
+        }
+        if (arr[1].length === 3) {
+            const result = arr[1].replace('_','')
+            return [arr[0],result,arr[2]].join('-')
+        }
+        return value
+    }
+    return resetMask(getValue())
+}
+
 export const setTextTimer = (timer: number) => {
     if (timer <= 0) return ''
 

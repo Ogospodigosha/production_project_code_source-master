@@ -5,10 +5,11 @@ import {Theme} from "../theme/ThemeContext";
 
 type PropsType = {
     currentTheme: Theme
+    authTypeProps?: 'MTS_ID' | 'BASIC_SMS'
 }
 
 
-const TestComponent: FC<PropsType> = ({currentTheme}) => {
+const TestComponent: FC<PropsType> = ({currentTheme, authTypeProps}) => {
     const getTimer= (timer: number) =>{
         setUnmountTimer(timer)
     }
@@ -31,7 +32,7 @@ const TestComponent: FC<PropsType> = ({currentTheme}) => {
     // }, [isUnMount, unMountTimer])
     return (
         <ThemeProvider currentTheme={currentTheme}>
-            <AuthWindow setIsUnmount={setIsUnmount} getTimer={getTimer}/>
+            <AuthWindow setIsUnmount={setIsUnmount} getTimer={getTimer} authTypeProps={authTypeProps}/>
         </ThemeProvider>
     );
 };

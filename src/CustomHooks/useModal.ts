@@ -7,6 +7,11 @@ import {confirmCode} from "../request/confirmCode";
 import useAuthWindow from "../store/authModalStore";
 import s from '../Notification/Notification.module.scss'
 import {AuthApi} from "../api/AuthApi";
+import {signInMobileId} from "../request/signInMobileId";
+import authModalStore from "../store/authModalStore";
+import {confirmMobileId} from "../request/confirmMobileId";
+import userInfoStore from "../store/userInfoStore";
+
 
 export const initialStateValid = {
     valid: false,
@@ -15,7 +20,7 @@ export const initialStateValid = {
     required: true,
     dirty: false
 }
-export const useModal = () => {
+export const useModal = (authTypeProps: string | undefined) => {
     const [valid, setValid] = useState(initialStateValid);
     const [intervalId, setIntervalId] = useState<any>();
     const setPhoneNumber = useUser(state => state.setPhoneNumber)
@@ -28,7 +33,10 @@ export const useModal = () => {
     const setViewModal = useAuthWindow(state => state.setViewModal)
     const [showCodeMessage, setShowCodeMessage] = useState(false);
     const [showChangePhone, setShowChangePhone] = useState(false);
-
+    const date_birthday = userStore(store => store.date_birthday)
+    const setAuthType = authModalStore(store => store.setAuthType)
+    const type = authModalStore(store => store.type)
+    const addUser = userInfoStore(store => store.addUser)
     useEffect(() => {
         document.addEventListener('click', outputClickHandler)
         return () => {
@@ -40,7 +48,6 @@ export const useModal = () => {
 
     useEffect(() => {
         if (timer === 0) {
-            debugger
             setShowCodeMessage(true)
             setIntervalId(undefined)
             clearInterval(intervalId)
@@ -50,7 +57,6 @@ export const useModal = () => {
     const outputClickHandler = (e: MouseEvent) => {
         const target = e.target as Element
         if (target && target.className === s['modal-container']) {
-            // dispatch(showModal(false, {}))
             setViewModal(false)
         }
     }
@@ -64,14 +70,17 @@ export const useModal = () => {
         if (!!intervalId) return;
         if (valid.valid && !valid.message) {
             debugger
-            // dispatch(setPhoneNumber(valid.value))
             setPhoneNumber(valid.value)
             if(localStorage.getItem('phoneNumberFromState') === valid.value) {
                 return
             }
             debugger
-            authSignIn(valid.value, intervalId, setSmsLoader, loader)
-            // AuthApi.signIn({phone: valid.value})
+            if (authTypeProps === 'MTS_ID'){
+                signInMobileId(valid.value, date_birthday || '', setSmsLoader, loader, setPhoneNumber, setAuthType );
+            } else   {
+                authSignIn(valid.value, intervalId, setSmsLoader, loader)
+            }
+
 
             //////////////////////////////////////////////////
             // dispatch(AppFormActions.updateUserPhone({value: valid.value, touched: true}))
@@ -83,21 +92,10 @@ export const useModal = () => {
             setTimeout(() => {
                 document.getElementById('code__confirm')?.focus()
             }, 1000)
-            //
-            // if (authTypeEnv === 'MTS') dispatch(signInMobileId(valid.value, date_birthday.result.value || ''));
-            // else dispatch(authSignIn(valid.value, intervalId));
-            //
-            // setTimeout(() => {
-            //     setShowChangePhone(true)
-            // }, 5000)
-            // setTimeout(() => {
-            //     document.getElementById('code__confirm')?.focus()
-            // }, 1000)
-        }
 
-        // else {
-            // dispatch(setSmsLoader(false))
-        // }
+        } else {
+           setSmsLoader(false)
+        }
         return () => clearInterval(intervalId)
     },[valid])
 
@@ -105,16 +103,9 @@ export const useModal = () => {
         const phone = valid.value || phoneNumber || ''
         if (resetMask(value).length === 4) {
             setSendingCode(true)
-
-            // const callback = href ? () => {
-            //     history.push(href)
-            // } : undefined
-            confirmCode(phone, Number(resetMask(value)), intervalId)
-            // if (type === 'BASIC_SMS') dispatch(confirmCode(phone, Number(resetMask(value)), intervalId, callback))
-            // else dispatch(confirmMobileId(phone, resetMask(value),  intervalId, callback));
-            // setSendingCode(false)
-
-
+            if (type === 'BASIC_SMS') confirmCode(phone, Number(resetMask(value)), intervalId)
+            else confirmMobileId(phone, resetMask(value),  intervalId, addUser)
+            setSendingCode(false)
         } else {
             // dispatch(setCodeMessage(''))
         }
@@ -140,9 +131,27 @@ export const useModal = () => {
                 []
             ))
         } else {
-            // dispatch(setSmsLoader(false))
+            setSmsLoader(false)
         }
     }
+
+    const checkInputPartner = (value: string, birthDateStatus?: boolean) => {
+        debugger
+        if (resetMask(value).length === 11 && birthDateStatus) {
+            setValid(checkPhone(
+                resetMask(value),
+                true,
+                'return_phone_without_mask',
+                null,
+                true,
+                []
+            ))
+        } else {
+            setSmsLoader(false)
+        }
+    }
+
+
     const changePhone = async () => {
         try {
             await AuthApi.checkChangePhone().then(res =>{
@@ -177,10 +186,10 @@ export const useModal = () => {
 
     const updateCode = async () => {
         try {
-            // const repeat = type === 'BASIC_SMS'
-            //     ? await ServiceApi.startConfirmPhoneNumber(valid.value)
-            //     : await AuthApi.mobileID({phone: valid.value, birthday: date_birthday.result.value || localStorage.getItem('birthday') || ""});
-            const repeat = await  AuthApi.startConfirmPhoneNumber(valid.value)
+            const repeat = type === 'BASIC_SMS'
+                ? await AuthApi.startConfirmPhoneNumber(valid.value)
+                : await AuthApi.mobileID({phone: valid.value, birthday: date_birthday || localStorage.getItem('birthday') || ""});
+            // const repeat = await  AuthApi.startConfirmPhoneNumber(valid.value)
             setCountClickResendSms(countClickResendSms + 1)
             if (repeat.status === 200 || repeat.status === 204) {
                 setShowCodeMessage(false)
@@ -210,6 +219,7 @@ export const useModal = () => {
         timer,
         countClickResendSms,
         updateCode: () => updateCode(),
+        checkInputPartner: (value: string, birthDateStatus?: boolean) => checkInputPartner(value, birthDateStatus),
     }
 }
 
