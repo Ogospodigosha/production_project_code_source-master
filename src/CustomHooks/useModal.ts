@@ -11,6 +11,7 @@ import {signInMobileId} from "../request/signInMobileId";
 import authModalStore from "../store/authModalStore";
 import {confirmMobileId} from "../request/confirmMobileId";
 import userInfoStore from "../store/userInfoStore";
+import useError from "../store/errorStore";
 
 
 export const initialStateValid = {
@@ -37,12 +38,12 @@ export const useModal = (authTypeProps: string | undefined) => {
     const setAuthType = authModalStore(store => store.setAuthType)
     const type = authModalStore(store => store.type)
     const addUser = userInfoStore(store => store.addUser)
+    const setError = useError(store => store.setError)
     useEffect(() => {
         document.addEventListener('click', outputClickHandler)
         return () => {
             document.removeEventListener('click', outputClickHandler)
             clearInterval(intervalId)
-            // clearModal()
         }
     }, [])
 
@@ -76,14 +77,10 @@ export const useModal = (authTypeProps: string | undefined) => {
             }
             debugger
             if (authTypeProps === 'MTS_ID'){
-                signInMobileId(valid.value, date_birthday || '', setSmsLoader, loader, setPhoneNumber, setAuthType );
+                signInMobileId(valid.value, date_birthday || '', setSmsLoader, loader, setPhoneNumber, setAuthType, setError, setViewModal );
             } else   {
-                authSignIn(valid.value, intervalId, setSmsLoader, loader)
+                authSignIn(valid.value, intervalId, setSmsLoader, loader, setAuthType, setError, setViewModal)
             }
-
-
-            //////////////////////////////////////////////////
-            // dispatch(AppFormActions.updateUserPhone({value: valid.value, touched: true}))
             startTimer(Date.now() + 60 * 1000);
 
             setTimeout(() => {
@@ -136,7 +133,6 @@ export const useModal = (authTypeProps: string | undefined) => {
     }
 
     const checkInputPartner = (value: string, birthDateStatus?: boolean) => {
-        debugger
         if (resetMask(value).length === 11 && birthDateStatus) {
             setValid(checkPhone(
                 resetMask(value),
@@ -155,8 +151,6 @@ export const useModal = (authTypeProps: string | undefined) => {
     const changePhone = async () => {
         try {
             await AuthApi.checkChangePhone().then(res =>{
-                // localStorage.removeItem('phoneNumber');
-                // localStorage.setItem('phoneNumber','');
                 localStorage.removeItem('phoneNumberFromState')
                 setIntervalId(undefined)
                 clearInterval(intervalId)
@@ -166,20 +160,20 @@ export const useModal = (authTypeProps: string | undefined) => {
             setTimer(-1)
             setCountClickResendSms(0)
             clearInterval(intervalId)
-            // dispatch(setSmsLoader(false))
-            // dispatch(setCodeMessage(null))
+            setSmsLoader(false)
+            // setCodeMessage(null)
         } catch (err: any) {
             if (err.response.status === 417) {
-                // dispatch(showModal(false))
-                // dispatch(addNotification('Вы исчерпали лимит смс в сутки, пожалуйста, попробуйте завтра'))
+                setViewModal(false)
+                setError('Вы исчерпали лимит смс в сутки, пожалуйста, попробуйте завтра')
             } else if (err.response.status === 429) {
-                // dispatch(addNotification('🐶🐱🐹🐭🐰🙈🦆🦀'))
+                setError('🐶🐱🐹🐭🐰🙈🦆🦀')
             } else if (err.response.status === 401) {
                 // dispatch(localLogOut())
                 // dispatch(addNotification('Пожалуйста, авторизуйтесь снова'))
+                setError('Пожалуйста, авторизуйтесь снова')
             } else if (err.response.status === 404) {
-                // history.push('/user/myProfile')
-                // dispatch(addNotification('Пожалуйста, заполните анкету снова'))
+                setError('Пожалуйста, заполните анкету снова')
             }
         }
     }
@@ -189,7 +183,6 @@ export const useModal = (authTypeProps: string | undefined) => {
             const repeat = type === 'BASIC_SMS'
                 ? await AuthApi.startConfirmPhoneNumber(valid.value)
                 : await AuthApi.mobileID({phone: valid.value, birthday: date_birthday || localStorage.getItem('birthday') || ""});
-            // const repeat = await  AuthApi.startConfirmPhoneNumber(valid.value)
             setCountClickResendSms(countClickResendSms + 1)
             if (repeat.status === 200 || repeat.status === 204) {
                 setShowCodeMessage(false)
@@ -200,12 +193,12 @@ export const useModal = (authTypeProps: string | undefined) => {
             }
         } catch (err: any) {
             if (err.response.status === 403) {
-                // dispatch(addNotification('Смс уже отправлена, дождитесь её'))
+                setError('Смс уже отправлена, дождитесь её')
             } else if (err.response.status === 429) {
-                // dispatch(addNotification('🐶🐱🐹🐭🐰🙈🦆🦀'))
+                setError('🐶🐱🐹🐭🐰🙈🦆🦀')
             } else if (err.response.status === 417) {
-                // dispatch(showModal(false))
-                // dispatch(addNotification('Вы исчерпали лимит смс в сутки, пожалуйста, попробуйте завтра'))
+                setViewModal(false)
+                setError('Вы исчерпали лимит смс в сутки, пожалуйста, попробуйте завтра')
             }
         }
     }

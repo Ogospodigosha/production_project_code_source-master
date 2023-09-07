@@ -12,7 +12,7 @@ export interface useCounterStateType {
 
 
 const useCounter = create(immer<useCounterStateType>((set) => ({
-     counter: 0,
+    counter: 0,
     token: '',
     setCounter: (counter: number) => {
         set(state => {

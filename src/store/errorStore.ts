@@ -1,21 +1,21 @@
 import create from 'zustand'
 import { immer } from 'zustand/middleware/immer'
-import {Nullable} from "../components/Subtitle/Subtitle";
 
 
-export interface useUserStateType {
-    error: number | null;
-    setError: (error: number)=> void
+
+export interface useErrorStateType {
+    error: string | null;
+    setError: (error: string)=> void
 }
 
 
 
-const useUser = create(immer<useUserStateType>((set) => ({
+const useError = create(immer<useErrorStateType>((set) => ({
     error: null,
-    setError: (error: number) => {
+    setError: (error: string) => {
         set(state => {
             state.error = error
         })
     },
 })))
-export default useUser
+export default useError
