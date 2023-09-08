@@ -28,7 +28,7 @@ export const useRequestModel = () =>{
                 setViewModal(false)
                 setError('Вы исчерпали лимит смс в сутки, пожалуйста, попробуйте завтра')
             } else if (err.response.status === 400) {
-                // await mtsAuthSignIn(phone, setSmsLoader, setAuthType, setPhoneNumber, setViewModal, setError)
+                await mtsAuthSignInFromModel(phone)
             }
             setPhoneNumber('')
             setSmsLoader(false)
