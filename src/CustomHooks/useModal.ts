@@ -79,7 +79,7 @@ export const useModal = (authTypeProps: string | undefined) => {
             if (authTypeProps === 'MTS_ID'){
                 signInMobileId(valid.value, date_birthday || '', setSmsLoader, loader, setPhoneNumber, setAuthType, setError, setViewModal );
             } else   {
-                authSignIn(valid.value, intervalId, setSmsLoader, loader, setAuthType, setError, setViewModal)
+                authSignIn(valid.value, intervalId, setSmsLoader, loader, setAuthType, setError, setViewModal, setPhoneNumber)
             }
             startTimer(Date.now() + 60 * 1000);
 

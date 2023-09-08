@@ -185,7 +185,7 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer, authTypeProps}) => {
                         <>
                             { modal.defaultPhone.length === 11 || phoneNumberFromState && phoneNumberFromState.length===11 ? (
 
-                                <p className={'document-text link-color link-action font-main'}  //modal.changePhone
+                                <p className={'document-text link-color link-action font-main'}
                                    onClick={()=>modal.changePhone()}>
                                     Изменить номер телефона
                                 </p>

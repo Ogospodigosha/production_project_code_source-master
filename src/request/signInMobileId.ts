@@ -1,7 +1,8 @@
 import {AuthApi} from "../api/AuthApi";
+import {mtsAuthSignIn} from "./mtsAuthSignIn";
 
 
-export const signInMobileId = async (phone: string, brithDate: string, setSmsLoader: (loader: boolean) => void, loader: boolean, setPhoneNumber: (phone: string) => void, setAuthType: (authType: string) => void, setError:(error: string)=>void, setViewModal: (view: boolean)=>void) => {
+export const signInMobileId = async (phone: string, brithDate: string, setSmsLoader: (loader: boolean) => void, loader: boolean, setPhoneNumber: (phone: string) => void, setAuthType: (authType: string) => void, setError: (error: string) => void, setViewModal: (view: boolean) => void) => {
     try {
         await AuthApi.mobileID({phone, birthday: brithDate}) // partner: 'mts'
         setSmsLoader(true)
@@ -15,10 +16,10 @@ export const signInMobileId = async (phone: string, brithDate: string, setSmsLoa
             setViewModal(false)
             setError('Вы исчерпали лимит смс в сутки, пожалуйста, попробуйте завтра')
         } else if (err.response.status === 400) {
-            // dispatch(mtsAuthSignIn(phone));
+            await mtsAuthSignIn(phone, setSmsLoader, setAuthType, setPhoneNumber, setViewModal, setError)
         }
-        // dispatch(setPhoneNumber(''));
-       setSmsLoader(false)
+        setPhoneNumber('')
+        setSmsLoader(false)
     }
 
 }
