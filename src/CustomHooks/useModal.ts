@@ -4,7 +4,6 @@ import {checkPhone, resetMask} from "../utils/utils";
 import userStore from "../store/userStore";
 
 import useAuthWindow from "../store/authModalStore";
-import s from '../Notification/Notification.module.scss'
 import {AuthApi} from "../api/AuthApi";
 import authModalStore from "../store/authModalStore";
 
@@ -57,7 +56,7 @@ export const useModal = (authTypeProps: string | undefined) => {
 
     const outputClickHandler = (e: MouseEvent) => {
         const target = e.target as Element
-        if (target && target.className === s['modal-container']) {
+        if (target && target.className === 'modal-container') {
             setViewModal(false)
         }
     }

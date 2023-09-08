@@ -1,5 +1,4 @@
 import React, {FC, useEffect, useState} from 'react';
-import s from '../Notification/Notification.module.scss'
 import './AuthWindow.scss'
 import '../styles/index.scss'
 import Wrapper from "../Layouts/Wrapper";
@@ -100,7 +99,7 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer, authTypeProps}) => {
 
     return (
         <>
-        <div className={s['modal-container']} style={{
+        <div className={'modal-container'} style={{
             perspective: 2000,
             display: location.pathname.includes('/pdf_/agreement') ? 'none' : 'flex'
         }}>
@@ -110,9 +109,9 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer, authTypeProps}) => {
                     boxShadow: '0px 0px 100px rgba(0,0,0,.4)'
                 }}
             >
-                <div onClick={() => setViewModal(false)} className={s['notification-close']}>
-                    <div className={s['notification-close-first-line']}/>
-                    <div className={s['notification-close-second-line']}/>
+                <div onClick={() => setViewModal(false)} className={'notification-close'}>
+                    <div className={'notification-close-first-line'}/>
+                    <div className={'notification-close-second-line'}/>
                 </div>
                 <div style={{maxWidth: isDesktop ? '100%' : '90%'}}>
                     <Prompt

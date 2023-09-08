@@ -47,3 +47,49 @@
     font-size: 13px !important;
   }
 }
+
+
+.notification-close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  height: 25px;
+  width: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: rgba(196, 196, 196, 1);
+  border-radius: 50%;
+}
+.notification-close-first-line {
+  position: absolute;
+  width: 15px;
+  height: 2px;
+  transform: rotate(45deg);
+  background-color: white;
+}
+
+.notification-close-second-line {
+  position: absolute;
+  width: 15px;
+  height: 2px;
+  transform: rotate(-45deg);
+  background-color: white;
+}
+.modal-container {
+  position: fixed;
+  z-index: 100;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  -webkit-justify-content: center;
+  align-items: center;
+  -webkit-align-items: center;
+}
+
