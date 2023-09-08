@@ -9,7 +9,7 @@ import authModalStore from "../store/authModalStore";
 
 import userInfoStore from "../store/userInfoStore";
 import useError from "../store/errorStore";
-import {useRequestModel} from "../request/requestModel";
+import {useRequestModel} from "./requestModel";
 
 
 export const initialStateValid = {

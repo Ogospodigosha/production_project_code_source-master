@@ -3,22 +3,14 @@ import { immer } from 'zustand/middleware/immer'
 
 
 export interface useCounterStateType {
-    counter: number
     token: string
     setToken: (token: string)=> void
-    setCounter: (counter: number)=>void
 }
 
 
 
-const useCounter = create(immer<useCounterStateType>((set) => ({
-    counter: 0,
+const useToken = create(immer<useCounterStateType>((set) => ({
     token: '',
-    setCounter: (counter: number) => {
-        set(state => {
-            state.counter = counter
-        })
-    },
     setToken: (token: string) =>{
         set(state => {
             state.token = token
@@ -26,4 +18,4 @@ const useCounter = create(immer<useCounterStateType>((set) => ({
     }
 
 })))
-export default useCounter
+export default useToken

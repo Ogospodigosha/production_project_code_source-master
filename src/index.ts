@@ -1,12 +1,12 @@
-import AuthWindow from "./AuthWindow/AuthWindow";
-import useCounter from "./store/store";
+import AuthWindow from "./components/AuthWindow/AuthWindow";
+import useToken from "./store/store";
 import useConfig from './store/configStore'
 import useAuthWindow from "./store/authModalStore";
-import TestComponent from "./testing/TestComponent";
+import AuthWindowWrapper from "./components/EntryComponent/AuthWindowWrapper";
 export {
     AuthWindow,
-    useCounter,
+    useToken,
     useConfig,
     useAuthWindow,
-    TestComponent
+    AuthWindowWrapper
 }

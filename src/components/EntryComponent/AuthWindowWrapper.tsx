@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
-import ThemeProvider from "../theme/ThemeProvider";
+import ThemeProvider from "../../theme/ThemeProvider";
 import AuthWindow from "../AuthWindow/AuthWindow";
-import {Theme} from "../theme/ThemeContext";
+import {Theme} from "../../theme/ThemeContext";
 
 type PropsType = {
     currentTheme: Theme
@@ -9,7 +9,7 @@ type PropsType = {
 }
 
 
-const TestComponent: FC<PropsType> = ({currentTheme, authTypeProps}) => {
+const AuthWindowWrapper: FC<PropsType> = ({currentTheme, authTypeProps}) => {
     const getTimer= (timer: number) =>{
         setUnmountTimer(timer)
     }
@@ -37,4 +37,4 @@ const TestComponent: FC<PropsType> = ({currentTheme, authTypeProps}) => {
     );
 };
 
-export default TestComponent;
+export default AuthWindowWrapper;

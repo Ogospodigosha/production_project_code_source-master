@@ -1,16 +1,16 @@
 import React, {FC, useEffect, useState} from 'react';
 import './AuthWindow.scss'
-import '../styles/index.scss'
+import '../../styles/index.scss'
 import Wrapper from "../Layouts/Wrapper";
-import {Prompt} from "../components/Prompt/Prompt";
-import {FormInput} from "../components/FormInput/OtherInputs";
-import useConfig from "../store/configStore";
-import {onDateInput, onPhoneInput, resetMask, setInputStatus, setTextTimer} from "../utils/utils";
-import {useModal} from "../CustomHooks/useModal";
-import useUser from "../store/userStore";
-import {CheckboxInput} from "../components/CheckboxInput/CheckboxInput";
-import userStore from "../store/userStore";
-import useAuthWindow from "../store/authModalStore";
+import {Prompt} from "../Prompt/Prompt";
+import {FormInput} from "../FormInput/OtherInputs";
+import useConfig from "../../store/configStore";
+import {onDateInput, onPhoneInput, resetMask, setInputStatus, setTextTimer} from "../../utils/utils";
+import {useModal} from "../../CustomHooks/useModal";
+import useUser from "../../store/userStore";
+import {CheckboxInput} from "../CheckboxInput/CheckboxInput";
+import userStore from "../../store/userStore";
+import useAuthWindow from "../../store/authModalStore";
 
 
 
