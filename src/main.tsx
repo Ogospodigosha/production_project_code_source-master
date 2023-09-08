@@ -7,7 +7,7 @@ import {Theme} from "./theme/ThemeContext";
 
 
 render(
-    <TestComponent currentTheme={'dark' as Theme} />
+    <TestComponent currentTheme={'dark' as Theme}  authTypeProps={"MTS_ID"}/>
     // <></>
 ,
         document.getElementById('root')

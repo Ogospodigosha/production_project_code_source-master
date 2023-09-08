@@ -152,8 +152,8 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer, authTypeProps}) => {
                         containerStyle={{marginTop: 20}}
                         placeholder={'например: 25-09-1972'}
                         inputStyle={
-                            !birthDateStatus
-                                ? {}
+                            birthDateStatus === undefined
+                                ? {background: 'rgba(3, 49, 140, 0.12)', padding: 10}
                                 : {background: 'rgba(3, 49, 140, 0.12)', padding: 10}
                         }
                         labelStyle={{textAlign: 'center'}}
