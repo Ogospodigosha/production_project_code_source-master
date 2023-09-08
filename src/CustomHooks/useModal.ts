@@ -1,17 +1,16 @@
 import {useEffect, useState} from "react";
 import useUser from "../store/userStore";
 import {checkPhone, resetMask} from "../utils/utils";
-import {authSignIn} from "../request/authSignIn";
 import userStore from "../store/userStore";
-import {confirmCode} from "../request/confirmCode";
+
 import useAuthWindow from "../store/authModalStore";
 import s from '../Notification/Notification.module.scss'
 import {AuthApi} from "../api/AuthApi";
-import {signInMobileId} from "../request/signInMobileId";
 import authModalStore from "../store/authModalStore";
-import {confirmMobileId} from "../request/confirmMobileId";
+
 import userInfoStore from "../store/userInfoStore";
 import useError from "../store/errorStore";
+import {useRequestModel} from "../request/requestModel";
 
 
 export const initialStateValid = {
@@ -32,6 +31,7 @@ export const useModal = (authTypeProps: string | undefined) => {
     const setSmsLoader = userStore(store => store.setSmsLoader)
     const loader = userStore(store => store.loader)
     const setViewModal = useAuthWindow(state => state.setViewModal)
+    const { signInMobileIdFromModel, authSignInFromModel, confirmCode, confirmMobileId } = useRequestModel()
     const [showCodeMessage, setShowCodeMessage] = useState(false);
     const [showChangePhone, setShowChangePhone] = useState(false);
     const date_birthday = userStore(store => store.date_birthday)
@@ -77,9 +77,11 @@ export const useModal = (authTypeProps: string | undefined) => {
             }
             debugger
             if (authTypeProps === 'MTS_ID'){
-                signInMobileId(valid.value, date_birthday || '', setSmsLoader, loader, setPhoneNumber, setAuthType, setError, setViewModal );
+                // signInMobileId(valid.value, date_birthday || '', setSmsLoader, loader, setPhoneNumber, setAuthType, setError, setViewModal );
+                signInMobileIdFromModel(valid.value, date_birthday || '')
             } else   {
-                authSignIn(valid.value, intervalId, setSmsLoader, loader, setAuthType, setError, setViewModal, setPhoneNumber)
+                // authSignIn(valid.value, intervalId, setSmsLoader, loader, setAuthType, setError, setViewModal, setPhoneNumber)
+                authSignInFromModel(valid.value, intervalId)
             }
             startTimer(Date.now() + 60 * 1000);
 
