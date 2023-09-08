@@ -62,24 +62,21 @@ export const useModal = (authTypeProps: string | undefined) => {
     }
 
     useEffect(() =>{
-        debugger
         if (timer === 0) {
             setIntervalId(undefined)
             clearInterval(intervalId)
         }
         if (!!intervalId) return;
         if (valid.valid && !valid.message) {
-            debugger
+
             setPhoneNumber(valid.value)
             if(localStorage.getItem('phoneNumberFromState') === valid.value) {
                 return
             }
-            debugger
+
             if (authTypeProps === 'MTS_ID'){
-                // signInMobileId(valid.value, date_birthday || '', setSmsLoader, loader, setPhoneNumber, setAuthType, setError, setViewModal );
                 signInMobileIdFromModel(valid.value, date_birthday || '')
             } else   {
-                // authSignIn(valid.value, intervalId, setSmsLoader, loader, setAuthType, setError, setViewModal, setPhoneNumber)
                 authSignInFromModel(valid.value, intervalId)
             }
             startTimer(Date.now() + 60 * 1000);

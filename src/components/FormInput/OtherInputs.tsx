@@ -4,6 +4,7 @@ import React, { useRef} from 'react'
 import useSelectedList, {ListMethods} from "../../CustomHooks/useSelectedList";
 import ReactInputMask from "react-input-mask";
 import './FormInput.scss'
+import {RenderIcon} from "../RenderIcon/RenderIcon";
 
 export interface UniversalTypes {
     fullGrid?: boolean
@@ -285,7 +286,7 @@ export const FormInput: React.FC<CustomInput> = ({
                             onClick={e => e.currentTarget.focus()}
                         />
                     )}
-                    {/*<RenderIcon status={status} field={'text'}/>*/}
+                    <RenderIcon status={status} field={'text'}/>
                 </div>
 
                 {/*<RenderInputMessage message={errorMessage || extraPlaceholder || ''} inputMessagesStyle={inputMessagesStyle}*/}

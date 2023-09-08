@@ -5,7 +5,7 @@ import Wrapper from "../Layouts/Wrapper";
 import {Prompt} from "../components/Prompt/Prompt";
 import {FormInput} from "../components/FormInput/OtherInputs";
 import useConfig from "../store/configStore";
-import {onDateInput, onPhoneInput, resetMask, setTextTimer} from "../utils/utils";
+import {onDateInput, onPhoneInput, resetMask, setInputStatus, setTextTimer} from "../utils/utils";
 import {useModal} from "../CustomHooks/useModal";
 import useUser from "../store/userStore";
 import {CheckboxInput} from "../components/CheckboxInput/CheckboxInput";
@@ -130,7 +130,7 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer, authTypeProps}) => {
                         onChange={phoneChangeHandler}
                         readOnly={false}
                         errorMessage={modal.valid.message}
-                        status={true}
+                        status={setInputStatus(modal.valid)}
                         required={modal.valid.required}
                         inputMode='tel'
                         maskedHandler={onPhoneInput}

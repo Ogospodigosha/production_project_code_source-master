@@ -174,7 +174,9 @@ export const checkPhone = (
         return dontTouch('Это поле обязательно для заполнения', required, v, dirty)
     }
 }
-
+export const setInputStatus = (item: any) => {
+    return item.valid ? true : (item.value && String(item.value).length > 0) || item.message.length > 0 ? false : undefined
+}
 export const onDateInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const getValue = () => {

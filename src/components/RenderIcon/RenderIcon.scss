@@ -1,0 +1,11 @@
+.icon-complete {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: url("../../Assets/icons/complete.svg") center;
+  background-size: contain;
+  right: 20px;
+  bottom: 16px;
+  animation: scaleIcon 1s ease-in-out forwards;
+}
