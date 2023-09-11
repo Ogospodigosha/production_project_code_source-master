@@ -1,4 +1,6 @@
 import {instance} from "./apiConfig";
+import {Nullable} from "../components/Subtitle/Subtitle";
+import {UserConfigType} from "../CustomHooks/requestModel";
 export interface MobileIDSignIn {
     phone: string;
     birthday: string;
@@ -76,5 +78,11 @@ export const AuthApi = {
     },
     async sendMtsSignUp({phone}: IValuesFormSignUp) {
         return await instance.post<AuthResponse>(AuthPath.MTS_SIGN_UP, {phone})
-    }
+    },
+    async sendAuthInfo(value: Nullable<string>, userConfigs: UserConfigType) {
+        return await instance.post('api/form/create/auth_info', {
+            phone_number: value, ...userConfigs,
+            checkin_page: `${window.location.href}`
+        })
+    },
 }

@@ -7,7 +7,7 @@ import {Theme} from "./theme/ThemeContext";
 
 
 render(
-    <AuthWindowWrapper currentTheme={'dark' as Theme} authTypeProps={"MTS_ID"}/>
+    <AuthWindowWrapper currentTheme={'dark' as Theme} />
     // <></>
 ,
         document.getElementById('root')

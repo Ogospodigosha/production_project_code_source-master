@@ -5,8 +5,25 @@ import authModalStore from "../store/authModalStore";
 import useError from "../store/errorStore";
 import useAuthWindow from "../store/authModalStore";
 import Cookies from "js-cookie";
+import userInfoStore from "../store/userInfoStore";
+import {resetMask} from "../utils/utils";
+import {Nullable} from "../components/Subtitle/Subtitle";
+import configUserStore from "../store/configUserStore";
 
-
+export interface UserConfigType {
+    user_agent: string,
+    type: 'MTS_ID' | 'BASIC_SMS',
+    screen_width: Nullable<number>,
+    screen_height: Nullable<number>,
+    opener: Nullable<string>,
+    language: Nullable<string>,
+    vendor: Nullable<string>,
+    vendor_version: Nullable<string>,
+    do_not_track: any,
+    cookie_enabled: Nullable<boolean>
+    address: any,
+    sms_code: Nullable<string>
+}
 
 export const useRequestModel = () =>{
     const setSmsLoader = userStore(store => store.setSmsLoader)
@@ -14,6 +31,10 @@ export const useRequestModel = () =>{
     const setAuthType = authModalStore(store => store.setAuthType)
     const setError = useError(store => store.setError)
     const setViewModal = useAuthWindow(state => state.setViewModal)
+    const userInfo = userInfoStore(store => store)
+    const addUser = userInfoStore(store => store.addUser)
+    const user = configUserStore(store => store.user)
+
     const signInMobileIdFromModel = async (phone: string, brithDate: string) =>{
         try {
             await AuthApi.mobileID({phone, birthday: brithDate}) // partner: 'mts'
@@ -122,30 +143,35 @@ export const useRequestModel = () =>{
         try {
             const response = await AuthApi.confirmCode({code, phone}).then(res =>{
                 localStorage.removeItem('phoneNumber');
-
                 return res;
             })
-
             Cookies.set('Bearer', response.data.token, {expires : 21});
-            // dispatch(addUser())
-            // if (intervalId) {
-            //     clearInterval(intervalId)
-            // }
-            //
-            // await dispatch(AppFormActions.updateUserPhone({
-            //     value: resetMask(phone),
-            //     touched: true
-            // }))
-            //
-            // await dispatch(sendAuthInfo(resetMask(phone), {...user, sms_code: resetMask(String(code))}, 'BASIC_SMS'))
-            //
-            // dispatch(setPhoneNumber(resetMask(phone)))
-            // callback && callback()
-        } catch (e) {
-
+            addUser()
+            if (intervalId) {
+                clearInterval(intervalId)
+            }
+            await sendAuthInfo(resetMask(phone), {...user, sms_code: resetMask(String(code))}, 'BASIC_SMS')
+            setPhoneNumber(resetMask(phone))
+        } catch (err: any) {
+            if (err.response.status === 429) {
+               setError('🐶🐱🐹🐭🐰🙈🦆🦀')
+            }
         }
-
     }
+
+    const sendAuthInfo = async(value: Nullable<string>, userConfigs: UserConfigType, authType: 'MTS_ID' | 'BASIC_SMS',)=> {
+        try {
+            await AuthApi.sendAuthInfo(value, {...userConfigs, type: authType})
+        } catch (err: any) {
+            if (err.response.status >= 400 && value && err.response.status !== 429) {
+                setTimeout(() => {
+                    sendAuthInfo(value, userConfigs, authType)
+                }, 20000)
+            }
+        }
+    }
+
+
     const confirmMobileId = async (phone: string, code: string, intervalId: any, addUser: ()=>void, callback?: () => void ) => {
         // const user = getState().config.user;
         try {
@@ -189,6 +215,7 @@ export const useRequestModel = () =>{
         mtsAuthSignInFromModel,
         mtsAuthSignUpFromModel,
         confirmCode,
-        confirmMobileId
+        confirmMobileId,
+        sendAuthInfo
     }
 }
