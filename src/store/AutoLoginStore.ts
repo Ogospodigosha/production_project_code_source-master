@@ -9,7 +9,7 @@ export interface useAutoLoginStateType {
         view: boolean,
         href: string | undefined,
     },
-    setAutologinModal: (view: boolean, href: string)=>void
+    setAutologinModal: (autoLoginModal: { view: boolean, href: string | undefined})=>void
 }
 
 
@@ -19,9 +19,11 @@ const useAutoLogin = create(immer<useAutoLoginStateType>((set) => ({
         view: false,
         href: undefined
     },
-    setAutologinModal: (view: boolean, href: string) => {
+    setAutologinModal: (autoLoginModal) => {
         set(state => {
-            if (!window.location.origin.includes('odobreno')) state.autoLoginModal = {view, href}
+            if (!window.location.origin.includes('odobreno')){
+               state.autoLoginModal = autoLoginModal
+            }
         })
     },
     setIsAutoLogin: (isAutologin: boolean) => {

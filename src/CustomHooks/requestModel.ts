@@ -6,9 +6,11 @@ import useError from "../store/errorStore";
 import useAuthWindow from "../store/authModalStore";
 import Cookies from "js-cookie";
 import userInfoStore from "../store/userInfoStore";
-import {resetMask} from "../utils/utils";
+import {getPage, resetMask} from "../utils/utils";
 import {Nullable} from "../components/Subtitle/Subtitle";
 import configUserStore from "../store/configUserStore";
+import useToken from "../store/store";
+import AutoLoginStore from "../store/AutoLoginStore";
 
 export interface UserConfigType {
     user_agent: string,
@@ -33,6 +35,9 @@ export const useRequestModel = () =>{
     const setViewModal = useAuthWindow(state => state.setViewModal)
     const addUser = userInfoStore(store => store.addUser)
     const user = configUserStore(store => store.user)
+    const setToken = useToken(store => store.setToken)
+    const setCode = useUser(store => store.setCode)
+    const setAutologinModal = AutoLoginStore(store => store.setAutologinModal)
 
     const signInMobileIdFromModel = async (phone: string, brithDate: string) =>{
         try {
@@ -197,6 +202,42 @@ export const useRequestModel = () =>{
 
     }
 
+     const useAutoAuthLogin = (isAuth: boolean, phoneNumber: Nullable<string>) => {
+        if (!(window.location.search.includes('?token=') || window.location.search.includes('&token='))) return
+        if (isAuth) return
+        if (phoneNumber) return ;
+
+        const location = window.location.search
+        let token
+        if (location.includes('?token=')) {
+            const index = location.lastIndexOf('?token=')
+            token = location.substring(index + 1, index + 22)
+        } else {
+            const index = location.lastIndexOf('&token=')
+            token = location.substring(index + 1, index + 22)
+        }
+        token = token.replace('token=', '')
+        const redirect = location.includes('redirect')
+        setToken(token)
+         getAutologinData(token, redirect)
+    }
+
+    const getAutologinData = async (token: string, redirect: boolean) => {
+        try {
+            const response = await AuthApi.getAutologinData(token)
+            setPhoneNumber(response.data.phone)
+            setCode(response.data.code)
+            if (!redirect || window.location.origin.includes('odobreno')) return;
+            setAutologinModal({view: true, href: `/user/credit/${getPage(location.origin)}/credit_parameters_info`})
+        } catch (err: any) {
+            if (err.response.status === 404) {
+                setError('Срок действия персональной ссылки истёк. Введите номер телефона и получите новый код для входа.')
+                if (!redirect || window.location.origin.includes('odobreno')) return
+                // return dispatch(showModal(true, {href: `/user/credit/${getPage(location.origin)}/credit_parameters_info`}))
+            } else console.log(err)
+        }
+    }
+
     return {
         signInMobileIdFromModel,
         authSignInFromModel,
@@ -205,6 +246,7 @@ export const useRequestModel = () =>{
         mtsAuthSignUpFromModel,
         confirmCode,
         confirmMobileId,
-        sendAuthInfo
+        sendAuthInfo,
+        useAutoAuthLogin
     }
 }

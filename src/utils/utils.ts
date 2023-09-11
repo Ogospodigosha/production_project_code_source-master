@@ -211,3 +211,15 @@ export const setTextTimer = (timer: number) => {
 
     return `${minutes} ${seconds > 0 ? seconds < 10 ? `: 0${seconds}` : `: ${seconds}` : ': 00'}`
 }
+const pages = ['credit_card', 'credit_cash', 'installment_card', 'mfo'];
+export const getPage = (location: string) => {
+    let result = 'credit_card'
+    pages.forEach((item) => {
+        if (location.includes(item)) {
+            result = item
+            return result
+        }
+    })
+
+    return result
+}

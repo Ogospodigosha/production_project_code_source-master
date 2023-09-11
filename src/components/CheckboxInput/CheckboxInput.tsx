@@ -39,27 +39,42 @@ export const CheckboxInput: React.FC<CheckboxInputPropsType> = ({
                                                                 }) => {
     return (
         <>
+            {label ? <div className="input-container" id={containerId} style={containerStyle}
+                          data-full-grid={fullGrid ? 'true' : ''}>
+                <div className="checkbox-container">
+                    <div
+                        className={`checkbox ${state ? `checked` : ''}`}
+                        onClick={() => setState(!state)}
+                    />
 
-        <div className="input-container" id={containerId} style={containerStyle}
-             data-full-grid={fullGrid ? 'true' : ''}>
-            <div className="checkbox-container">
-                <div
-                    className={`checkbox ${state ? `checked` : ''}`}
-                    onClick={() => setState(!state)}
-                />
-                <span className={'agreement-text'}>
-                    Я {path ? <a href={'/pdf_agreement'} target={target} rel={rel}
-                                       className={'agreement-text-decoration'}>{'соглашаюсь'}</a> : <span
-                    className={'agreement-text'}>{'соглашаюсь'}</span>} на обработку моих персональных данных и с условиями {secondPath ?
-                    <a href={`/pdf_/offer`} target={target} rel={rel}
-                             className={'agreement-text-decoration'}>{'оферты'}</a> : <span
-                        className={'agreement-text'}>{'оферты'}</span>}
+                    <span className={'agreement-text'}>
+                   <span className={'agreement-text'}>{label}</span>
                 </span>
 
 
-            </div>
-            {!state && required && message ? <span className="span-error">{message}</span> : ''}
-        </div>
+                </div>
+                {!state && required && message ? <span className="span-error">{message}</span> : ''}
+            </div> : <div className="input-container" id={containerId} style={containerStyle}
+                          data-full-grid={fullGrid ? 'true' : ''}>
+                <div className="checkbox-container">
+                    <div
+                        className={`checkbox ${state ? `checked` : ''}`}
+                        onClick={() => setState(!state)}
+                    />
+                    <span className={'agreement-text'}>
+                    Я {path ? <a href={'/pdf_agreement'} target={target} rel={rel}
+                                 className={'agreement-text-decoration'}>{'соглашаюсь'}</a> : <span
+                        className={'agreement-text'}>{'соглашаюсь'}</span>} на обработку моих персональных данных и с условиями {secondPath ?
+                        <a href={`/pdf_/offer`} target={target} rel={rel}
+                           className={'agreement-text-decoration'}>{'оферты'}</a> : <span
+                            className={'agreement-text'}>{'оферты'}</span>}
+                </span>
+
+
+                </div>
+                {!state && required && message ? <span className="span-error">{message}</span> : ''}
+            </div>}
+
         </>
     )
 }
