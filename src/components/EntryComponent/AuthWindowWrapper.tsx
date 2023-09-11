@@ -1,7 +1,8 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC,  useState} from 'react';
 import ThemeProvider from "../../theme/ThemeProvider";
 import AuthWindow from "../AuthWindow/AuthWindow";
 import {Theme} from "../../theme/ThemeContext";
+import useAutoLogin from "../../store/AutoLoginStore";
 
 type PropsType = {
     currentTheme: Theme
@@ -10,8 +11,13 @@ type PropsType = {
 
 
 const AuthWindowWrapper: FC<PropsType> = ({currentTheme, authTypeProps}) => {
+    const setIsAutoLogin = useAutoLogin(store => store.setIsAutoLogin)
+    const isAutologin = useAutoLogin(store => store.isAutologin)
     const getTimer= (timer: number) =>{
         setUnmountTimer(timer)
+    }
+    if (window.location.search.includes('?token=')) {
+        setIsAutoLogin(true)
     }
 
     const [ unMountTimer, setUnmountTimer]  = useState(0)
@@ -32,7 +38,7 @@ const AuthWindowWrapper: FC<PropsType> = ({currentTheme, authTypeProps}) => {
     // }, [isUnMount, unMountTimer])
     return (
         <ThemeProvider currentTheme={currentTheme}>
-            <AuthWindow setIsUnmount={setIsUnmount} getTimer={getTimer} authTypeProps={authTypeProps}/>
+            <AuthWindow setIsUnmount={setIsUnmount} getTimer={getTimer} authTypeProps={authTypeProps} isAutologin={isAutologin}/>
         </ThemeProvider>
     );
 };

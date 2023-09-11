@@ -3,6 +3,8 @@ import {immer} from 'zustand/middleware/immer'
 
 
 export interface useAutoLoginStateType {
+    isAutologin: boolean
+    setIsAutoLogin: (isAutologin: boolean)=> void
     autoLoginModal: {
         view: boolean,
         href: string | undefined,
@@ -12,6 +14,7 @@ export interface useAutoLoginStateType {
 
 
 const useAutoLogin = create(immer<useAutoLoginStateType>((set) => ({
+    isAutologin: false,
     autoLoginModal:{
         view: false,
         href: undefined
@@ -19,6 +22,11 @@ const useAutoLogin = create(immer<useAutoLoginStateType>((set) => ({
     setAutologinModal: (view: boolean, href: string) => {
         set(state => {
             if (!window.location.origin.includes('odobreno')) state.autoLoginModal = {view, href}
+        })
+    },
+    setIsAutoLogin: (isAutologin: boolean) => {
+        set(state => {
+            state.isAutologin = isAutologin
         })
     },
 

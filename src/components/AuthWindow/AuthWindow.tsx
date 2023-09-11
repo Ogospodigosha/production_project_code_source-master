@@ -19,10 +19,12 @@ type PropsType = {
     setIsUnmount: (isUnmount: boolean) =>void
     getTimer: (timer: number) => void
     authTypeProps?: 'MTS_ID' | 'BASIC_SMS'
+    isAutologin: boolean
 }
 
 
-const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer, authTypeProps}) => {
+const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer, authTypeProps, isAutologin}) => {
+    console.log(isAutologin)
     const isDesktop = useConfig(state => state.isDesktop)
     const setViewModal = useAuthWindow(state => state.setViewModal)
     const view = useAuthWindow(state => state.view)
@@ -34,11 +36,9 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer, authTypeProps}) => {
     const birthDateHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (resetMask(e.target.value).length === 8){
             setDateBirthday(e.target.value)
-            // setPhoneNumberFromState(unmaskedPhoneNumber)
         }
     };
     const date_birthday = userStore(store => store.date_birthday)
-    // const birthDateStatus =  phoneNumberFromState?.length === 11 && date_birthday.length === 10
 
     const setDateBirthday = userStore(store => store.setDateBirthday)
 
@@ -115,7 +115,7 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer, authTypeProps}) => {
                 </div>
                 <div style={{maxWidth: isDesktop ? '100%' : '90%'}}>
                     <Prompt
-                        title={'Укажите ваш номер телефона для отправки заявки'}
+                        title={ isAutologin ? 'Ваш номер телефона': 'Укажите ваш номер телефона для отправки заявки'}
                         titleStyle={{textAlign: 'center'}}
                     />
                     <FormInput
@@ -237,6 +237,9 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer, authTypeProps}) => {
                         </>
 
                     ) : ''}
+                    {isAutologin ? <button type='button' onClick={() => {}} className={'button__auth'}>
+                        Далее
+                    </button>: ''}
 
                 </div>
             </Wrapper>
