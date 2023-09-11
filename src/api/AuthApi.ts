@@ -6,6 +6,12 @@ export interface MobileIDSignIn {
     birthday: string;
 }
 
+export interface IValuesFormConfirmCodeAutologin {
+    code: number;
+    phone: string | undefined;
+    token: string | null;
+}
+
 export interface SmsVerif {
     phone: string;
     code: string;
@@ -21,6 +27,8 @@ enum AuthPath {
     MTS_SIGN_IN = '/api/auth/sign_in_mts',
     MTS_SIGN_UP = '/api/auth/sign_up_mts',
     SIGN_UP = 'api/auth/sign-up',
+    GET_AUTOLOGIN_DATA = '/api/auth/get_autologin_data',
+    CONFIRM_AUTOLOGIN = '/api/auth/confirm_autologin',
 }
 
 export interface IValueFormSignIn {
@@ -85,4 +93,10 @@ export const AuthApi = {
             checkin_page: `${window.location.href}`
         })
     },
+    async getAutologinData(autologin_token: string) {
+        return await instance.get(`${AuthPath.GET_AUTOLOGIN_DATA}?autologin_token=${autologin_token}`)
+    },
+    async confirmAutologinCode(data: IValuesFormConfirmCodeAutologin) {
+        return await instance.post<AuthTokenResponse>(AuthPath.CONFIRM_AUTOLOGIN, data)
+    }
 }
