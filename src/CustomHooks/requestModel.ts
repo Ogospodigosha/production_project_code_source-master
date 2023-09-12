@@ -237,7 +237,24 @@ export const useRequestModel = () =>{
             } else console.log(err)
         }
     }
-
+     const confirmAutologinCode = async(phone: Nullable<string>, code: number, token: Nullable<string>, intervalId: any, callback?: () => void) => {
+        const phoneNumber = phone === null ? undefined : phone
+        try {
+            const response = await AuthApi.confirmAutologinCode({code, phone: phoneNumber, token})
+            Cookies.set('Bearer', response.data.token, {expires : 21})
+            addUser()
+            if (intervalId) {
+                clearInterval(intervalId)
+            }
+            await sendAuthInfo(resetMask(phone), {...user, sms_code: resetMask(String(code))}, 'BASIC_SMS')
+            setPhoneNumber(resetMask(phone))
+            callback && callback()
+        } catch (err: any) {
+            setPhoneNumber('')
+            setError('Срок действия персональной ссылки истёк. Введите номер телефона и получите новый код для входа.')
+            setAutologinModal({view: false, href: ''})
+        }
+    }
     return {
         signInMobileIdFromModel,
         authSignInFromModel,
@@ -247,6 +264,7 @@ export const useRequestModel = () =>{
         confirmCode,
         confirmMobileId,
         sendAuthInfo,
-        useAutoAuthLogin
+        useAutoAuthLogin,
+        confirmAutologinCode
     }
 }

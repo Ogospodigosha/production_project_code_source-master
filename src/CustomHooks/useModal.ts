@@ -10,6 +10,9 @@ import authModalStore from "../store/authModalStore";
 import userInfoStore from "../store/userInfoStore";
 import useError from "../store/errorStore";
 import {useRequestModel} from "./requestModel";
+import {Nullable} from "../components/Subtitle/Subtitle";
+import useToken from "../store/store";
+
 
 
 export const initialStateValid = {
@@ -38,6 +41,9 @@ export const useModal = (authTypeProps: string | undefined) => {
     const type = authModalStore(store => store.type)
     const addUser = userInfoStore(store => store.addUser)
     const setError = useError(store => store.setError)
+    const token = useToken(store => store.token)
+    const {confirmAutologinCode} = useRequestModel()
+
     useEffect(() => {
         document.addEventListener('click', outputClickHandler)
         return () => {
@@ -145,6 +151,14 @@ export const useModal = (authTypeProps: string | undefined) => {
         }
     }
 
+    const checkAutologinCode = (value: Nullable<string>) => {
+        if (!value) return
+        // const callback = autoLoginHref ? () => {
+        //     history.push(autoLoginHref)
+        // } : undefined
+        confirmAutologinCode(phoneNumber, Number(value), token, intervalId)
+    }
+
 
     const changePhone = async () => {
         try {
@@ -211,6 +225,7 @@ export const useModal = (authTypeProps: string | undefined) => {
         countClickResendSms,
         updateCode: () => updateCode(),
         checkInputPartner: (value: string, birthDateStatus?: boolean) => checkInputPartner(value, birthDateStatus),
+        checkAutologinCode: (value: Nullable<string>) => checkAutologinCode(value),
     }
 }
 

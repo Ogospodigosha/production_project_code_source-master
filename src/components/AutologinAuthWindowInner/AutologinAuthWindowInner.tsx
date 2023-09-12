@@ -4,14 +4,18 @@ import {Prompt} from "../Prompt/Prompt";
 import s from './AutologinAuthWindowInner.module.scss'
 import {CheckboxInput} from "../CheckboxInput/CheckboxInput";
 import userStore from "../../store/userStore";
+import {useModal} from "../../CustomHooks/useModal";
+import {getPage} from "../../utils/utils";
+import useAutoLogin from "../../store/AutoLoginStore";
 
 const AutologinAuthWindowInner = () => {
-    // const {phoneNumber, code} = useAppSelector(store => store.session)
+    const modal = useModal(undefined)
     const phoneNumber = userStore(store => store.phoneNumber)
     const code = userStore(store => store.code)
+    const setAutologinModal = useAutoLogin(store => store.setAutologinModal)
     const clickHandler = () => {
-        // dispatch(setAutologinModal({view: false, href: `/user/credit/${getPage(location.origin)}/${current_step}`}))
-        // modal.checkAutologinCode(code)
+        setAutologinModal({view: false, href: `/user/credit/${getPage(location.origin)}/`})
+        modal.checkAutologinCode(code)
     }
     return (
         <div className={s.authWindow}>
