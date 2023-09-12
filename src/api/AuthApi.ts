@@ -24,11 +24,11 @@ enum AuthPath {
     CONFIRM = 'api/auth/confirm',
     MOBILE_ID = 'api/auth/mobile_id/send-sms',
     VERIFY_SMS = 'api/auth/mobile_id/verify-sms',
-    MTS_SIGN_IN = '/api/auth/sign_in_mts',
-    MTS_SIGN_UP = '/api/auth/sign_up_mts',
+    MTS_SIGN_IN = 'api/auth/sign_in_mts',
+    MTS_SIGN_UP = 'api/auth/sign_up_mts',
     SIGN_UP = 'api/auth/sign-up',
-    GET_AUTOLOGIN_DATA = '/api/auth/get_autologin_data',
-    CONFIRM_AUTOLOGIN = '/api/auth/confirm_autologin',
+    GET_AUTOLOGIN_DATA = 'api/auth/get_autologin_data',
+    CONFIRM_AUTOLOGIN = 'api/auth/confirm_autologin',
 }
 
 export interface IValueFormSignIn {
@@ -46,13 +46,7 @@ export interface IValuesFormConfirmCode {
 export interface AuthTokenResponse extends AuthResponse {
     token: string;
 }
-//const AuthApi = (backUrl) => {
-// const signIn = async () => {
-// return await ...
-// }
-//
-// return {signIn}
-// }
+
 export const AuthApi = (backUrl: string)=>{
     const signIn = async ({phone}: IValueFormSignIn)=>{
         return await instance.post<AuthResponse>(`${backUrl}/${AuthPath.SIGN_IN}`, {phone})
@@ -100,10 +94,10 @@ export const AuthApi = (backUrl: string)=>{
         })
     }
     const getDataAutologin = async (autologin_token: string) =>{
-        return await instance.get(`${backUrl}${AuthPath.GET_AUTOLOGIN_DATA}?autologin_token=${autologin_token}`)
+        return await instance.get(`${backUrl}/${AuthPath.GET_AUTOLOGIN_DATA}?autologin_token=${autologin_token}`)
     }
     const autologinCodeConfirm = async (data: IValuesFormConfirmCodeAutologin)=>{
-        return await instance.post<AuthTokenResponse>(`${backUrl}/AuthPath.CONFIRM_AUTOLOGIN`, data)
+        return await instance.post<AuthTokenResponse>(`${backUrl}/${AuthPath.CONFIRM_AUTOLOGIN}`, data)
     }
     return {
         signIn,
