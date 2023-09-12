@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC} from 'react';
 import {FormInput} from "../FormInput/OtherInputs";
 import {Prompt} from "../Prompt/Prompt";
 import s from './AutologinAuthWindowInner.module.scss'
@@ -8,8 +8,12 @@ import {useModal} from "../../CustomHooks/useModal";
 import {getPage} from "../../utils/utils";
 import useAutoLogin from "../../store/AutoLoginStore";
 
-const AutologinAuthWindowInner = () => {
-    const modal = useModal(undefined)
+type PropsType = {
+    backUrl: string
+}
+
+const AutologinAuthWindowInner :FC<PropsType> = ({backUrl}) => {
+    const modal = useModal(undefined, backUrl)
     const phoneNumber = userStore(store => store.phoneNumber)
     const code = userStore(store => store.code)
     const setAutologinModal = useAutoLogin(store => store.setAutologinModal)

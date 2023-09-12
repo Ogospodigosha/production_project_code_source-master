@@ -27,7 +27,7 @@ export interface UserConfigType {
     sms_code: Nullable<string>
 }
 
-export const useRequestModel = () =>{
+export const useRequestModel = (backUrl: string) =>{
     const setSmsLoader = userStore(store => store.setSmsLoader)
     const setPhoneNumber = useUser(state => state.setPhoneNumber)
     const setAuthType = authModalStore(store => store.setAuthType)
@@ -38,10 +38,12 @@ export const useRequestModel = () =>{
     const setToken = useToken(store => store.setToken)
     const setCode = useUser(store => store.setCode)
     const setAutologinModal = AutoLoginStore(store => store.setAutologinModal)
-
+    const token = useToken(store => store.token)
+    const {mobileID, signIn, signUp, sendMtsSignIn, sendMtsSignUp, confirmCodeBasic,
+    sendInfoAuth, smsVerif, getDataAutologin, autologinCodeConfirm} = AuthApi(backUrl)
     const signInMobileIdFromModel = async (phone: string, brithDate: string) =>{
         try {
-            await AuthApi.mobileID({phone, birthday: brithDate}) // partner: 'mts'
+            await mobileID({phone, birthday: brithDate}) // partner: 'mts'
             setSmsLoader(true)
             setPhoneNumber(phone)
             setAuthType('MTS_ID')
@@ -61,7 +63,7 @@ export const useRequestModel = () =>{
     }
     const authSignInFromModel = async (phone: string, intervalId: any)=>{
         try {
-            await AuthApi.signIn({phone})
+            await signIn({phone})
             setSmsLoader(true)
             setPhoneNumber(phone)
             setAuthType('BASIC_SMS')
@@ -85,7 +87,7 @@ export const useRequestModel = () =>{
     }
     const authSignUpFromModel = async (phone: string) =>{
         try{
-            await AuthApi.signUp({phone})
+            await signUp({phone})
             setSmsLoader(true)
             setPhoneNumber(phone)
             setAuthType('BASIC_SMS')
@@ -103,7 +105,7 @@ export const useRequestModel = () =>{
     }
     const mtsAuthSignInFromModel = async(phone: string) =>{
         try {
-            await AuthApi.sendMtsSignIn({phone})
+            await sendMtsSignIn({phone})
             setSmsLoader(true)
             setAuthType('BASIC_SMS')
             setPhoneNumber(phone)
@@ -127,7 +129,7 @@ export const useRequestModel = () =>{
     }
     const mtsAuthSignUpFromModel = async(phone: string)=> {
         try {
-            await AuthApi.sendMtsSignUp({phone})
+            await sendMtsSignUp({phone})
             setSmsLoader(true)
             setPhoneNumber(phone)
             setAuthType('BASIC_SMS')
@@ -145,11 +147,14 @@ export const useRequestModel = () =>{
     }
     const confirmCode = async (phone: string, code: number, intervalId: any, callback?: () => void) =>{
         try {
-            const response = await AuthApi.confirmCode({code, phone}).then(res =>{
+            const response = await confirmCodeBasic({code, phone}).then(res =>{
                 localStorage.removeItem('phoneNumber');
+                setToken(res.data.token)
                 return res;
             })
             Cookies.set('Bearer', response.data.token, {expires : 21});
+
+            console.log(token)
             addUser()
             if (intervalId) {
                 clearInterval(intervalId)
@@ -165,7 +170,7 @@ export const useRequestModel = () =>{
 
     const sendAuthInfo = async(value: Nullable<string>, userConfigs: UserConfigType, authType: 'MTS_ID' | 'BASIC_SMS',)=> {
         try {
-            await AuthApi.sendAuthInfo(value, {...userConfigs, type: authType})
+            await sendInfoAuth(value, {...userConfigs, type: authType})
         } catch (err: any) {
             if (err.response.status >= 400 && value && err.response.status !== 429) {
                 setTimeout(() => {
@@ -179,7 +184,7 @@ export const useRequestModel = () =>{
     const confirmMobileId = async (phone: string, code: string, intervalId: any, addUser: ()=>void, callback?: () => void ) => {
         try {
             // setSpinner({loaderStatus: true, message: 'Проверяем введённый код...', type: 'future'})
-            const response = await AuthApi.smsVerif({
+            const response = await smsVerif({
                 phone,
                 code,
             }); //partner: 'mts'
@@ -224,7 +229,7 @@ export const useRequestModel = () =>{
 
     const getAutologinData = async (token: string, redirect: boolean) => {
         try {
-            const response = await AuthApi.getAutologinData(token)
+            const response = await getDataAutologin(token)
             setPhoneNumber(response.data.phone)
             setCode(response.data.code)
             if (!redirect || window.location.origin.includes('odobreno')) return;
@@ -240,7 +245,7 @@ export const useRequestModel = () =>{
      const confirmAutologinCode = async(phone: Nullable<string>, code: number, token: Nullable<string>, intervalId: any, callback?: () => void) => {
         const phoneNumber = phone === null ? undefined : phone
         try {
-            const response = await AuthApi.confirmAutologinCode({code, phone: phoneNumber, token})
+            const response = await autologinCodeConfirm({code, phone: phoneNumber, token})
             Cookies.set('Bearer', response.data.token, {expires : 21})
             addUser()
             if (intervalId) {

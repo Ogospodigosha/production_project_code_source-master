@@ -91,6 +91,8 @@
   -webkit-justify-content: center;
   align-items: center;
   -webkit-align-items: center;
+  perspective: 2000px;
+
 }
 .button__auth {
   margin-top: 20px;
@@ -101,4 +103,7 @@
   color: white;
   background-color: #FF3B30;
   cursor: pointer;
+}
+.modal-container.close {
+  display: none;
 }

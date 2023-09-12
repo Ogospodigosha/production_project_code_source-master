@@ -7,7 +7,7 @@ import {Theme} from "./theme/ThemeContext";
 
 
 render(
-    <AuthWindowWrapper currentTheme={'dark' as Theme} />
+    <AuthWindowWrapper currentTheme={'dark' as Theme} backUrl={'https://test.onbank.online'} />
     // <></>
 ,
         document.getElementById('root')

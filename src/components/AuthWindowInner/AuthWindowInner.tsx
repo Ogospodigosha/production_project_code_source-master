@@ -9,9 +9,10 @@ import {Prompt} from "../Prompt/Prompt";
 
 type PropsType = {
     authTypeProps?: 'MTS_ID' | 'BASIC_SMS'
+    backUrl: string
 }
 
-const AuthWindowInner: FC<PropsType> = ({authTypeProps}) => {
+const AuthWindowInner: FC<PropsType> = ({authTypeProps, backUrl}) => {
     const [phoneNumber, setPhoneNumber] = useState<string | null>(localStorage.getItem('phoneNumber') || '');
     const phoneNumberFromState = useUser(state => state.phoneNumber)|| localStorage.getItem('phoneNumberFromState');
     const date_birthday = userStore(store => store.date_birthday)
@@ -20,7 +21,7 @@ const AuthWindowInner: FC<PropsType> = ({authTypeProps}) => {
     const loader = userStore(store => store.loader)
     let birthDateStatus =  unmaskedPhoneNumber.length===11 && date_birthday.length===10 ? true: undefined
     let KEY_PHONE_NUMBER = localStorage.getItem('phoneNumberFromState') || ''
-    const modal = useModal(authTypeProps)
+    const modal = useModal(authTypeProps, backUrl)
     const labelTextAuth = !!authTypeProps
         ? 'Вам поступит смс в формате "1234" - Ваш одноразовый код, не сообщайте его никому\nВведите код подтверждения из смс'
         : 'Введите код подтверждения из СМС';

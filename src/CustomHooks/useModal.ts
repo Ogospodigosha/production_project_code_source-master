@@ -22,7 +22,7 @@ export const initialStateValid = {
     required: true,
     dirty: false
 }
-export const useModal = (authTypeProps: string | undefined) => {
+export const useModal = (authTypeProps: string | undefined, backUrl: string) => {
     const [valid, setValid] = useState(initialStateValid);
     const [intervalId, setIntervalId] = useState<any>();
     const setPhoneNumber = useUser(state => state.setPhoneNumber)
@@ -33,7 +33,7 @@ export const useModal = (authTypeProps: string | undefined) => {
     const setSmsLoader = userStore(store => store.setSmsLoader)
     const loader = userStore(store => store.loader)
     const setViewModal = useAuthWindow(state => state.setViewModal)
-    const { signInMobileIdFromModel, authSignInFromModel, confirmCode, confirmMobileId } = useRequestModel()
+    const { signInMobileIdFromModel, authSignInFromModel, confirmCode, confirmMobileId } = useRequestModel(backUrl)
     const [showCodeMessage, setShowCodeMessage] = useState(false);
     const [showChangePhone, setShowChangePhone] = useState(false);
     const date_birthday = userStore(store => store.date_birthday)
@@ -42,8 +42,8 @@ export const useModal = (authTypeProps: string | undefined) => {
     const addUser = userInfoStore(store => store.addUser)
     const setError = useError(store => store.setError)
     const token = useToken(store => store.token)
-    const {confirmAutologinCode} = useRequestModel()
-
+    const {confirmAutologinCode} = useRequestModel(backUrl)
+    const {checkChangePhone, startConfirmPhoneNumber, mobileID} = AuthApi(backUrl)
     useEffect(() => {
         document.addEventListener('click', outputClickHandler)
         return () => {
@@ -162,7 +162,7 @@ export const useModal = (authTypeProps: string | undefined) => {
 
     const changePhone = async () => {
         try {
-            await AuthApi.checkChangePhone().then(res =>{
+            await checkChangePhone().then(res =>{
                 localStorage.removeItem('phoneNumberFromState')
                 setIntervalId(undefined)
                 clearInterval(intervalId)
@@ -193,8 +193,8 @@ export const useModal = (authTypeProps: string | undefined) => {
     const updateCode = async () => {
         try {
             const repeat = type === 'BASIC_SMS'
-                ? await AuthApi.startConfirmPhoneNumber(valid.value)
-                : await AuthApi.mobileID({phone: valid.value, birthday: date_birthday || localStorage.getItem('birthday') || ""});
+                ? await startConfirmPhoneNumber(valid.value)
+                : await mobileID({phone: valid.value, birthday: date_birthday || localStorage.getItem('birthday') || ""});
             setCountClickResendSms(countClickResendSms + 1)
             if (repeat.status === 200 || repeat.status === 204) {
                 setShowCodeMessage(false)

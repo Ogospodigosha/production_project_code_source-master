@@ -13,19 +13,18 @@ type PropsType = {
     getTimer: (timer: number) => void
     authTypeProps?: 'MTS_ID' | 'BASIC_SMS'
     isAutologin: boolean
+    backUrl: string
 }
 
 
-const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer, authTypeProps, isAutologin}) => {
+const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer, authTypeProps, isAutologin, backUrl}) => {
     const isDesktop = useConfig(state => state.isDesktop)
     const setViewModal = useAuthWindow(state => state.setViewModal)
-
+    const view = useAuthWindow(state => state.view)
+    console.log(view)
     return (
         <>
-            <div className={'modal-container'} style={{
-                perspective: 2000,
-                display: location.pathname.includes('/pdf_/agreement') ? 'none' : 'flex'
-            }}>
+            <div className={view ? 'modal-container': 'modal-container close'} style = {location.pathname.includes('/pdf') ? {display:"none"} : undefined}>
                 <Wrapper
                     style={{
                         maxWidth: 400, margin: 20, padding: 30, overflow: 'hidden', transition: 'all .5s',
@@ -38,7 +37,7 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer, authTypeProps, isAut
                     </div>
                     <div style={{maxWidth: isDesktop ? '100%' : '90%'}}>
 
-                        {isAutologin ? <AutologinAuthWindowInner/> : <AuthWindowInner authTypeProps={authTypeProps}/>}
+                        {isAutologin ? <AutologinAuthWindowInner backUrl={backUrl}/> : <AuthWindowInner authTypeProps={authTypeProps} backUrl={backUrl}/>}
                     </div>
                 </Wrapper>
             </div>
