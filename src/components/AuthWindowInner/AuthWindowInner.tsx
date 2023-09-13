@@ -22,6 +22,7 @@ const AuthWindowInner: FC<PropsType> = ({authTypeProps, backUrl}) => {
     let birthDateStatus =  unmaskedPhoneNumber.length===11 && date_birthday.length===10 ? true: undefined
     let KEY_PHONE_NUMBER = localStorage.getItem('phoneNumberFromState') || ''
     const modal = useModal(authTypeProps, backUrl)
+
     const labelTextAuth = !!authTypeProps
         ? 'Вам поступит смс в формате "1234" - Ваш одноразовый код, не сообщайте его никому\nВведите код подтверждения из смс'
         : 'Введите код подтверждения из СМС';
@@ -29,15 +30,22 @@ const AuthWindowInner: FC<PropsType> = ({authTypeProps, backUrl}) => {
         setPhoneNumber(e.target.value)
     };
     const birthDateHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+
         if (resetMask(e.target.value).length === 8){
-            setDateBirthday(e.target.value)
+            birthDateStatus = true
+            if (e.target.value.includes('_')) {
+                let str = e.target.value.slice(0, -1)
+                setDateBirthday(str)
+            }
         }
+
     };
     const codeChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (resetMask(e.target.value).length === 4 || resetMask(e.target.value).length === 0) {
             modal.checkCode(e)
         }
     };
+
     useEffect(() => {
         if (!!authTypeProps) {
             modal.checkInputPartner(unmaskedPhoneNumber, birthDateStatus)
@@ -55,6 +63,7 @@ const AuthWindowInner: FC<PropsType> = ({authTypeProps, backUrl}) => {
     },[modal.timer])
     useEffect(()=>{
         if (!!authTypeProps && date_birthday) {
+            if (date_birthday.includes('_')) return
             localStorage.setItem('birthday', date_birthday)
             // localStorage.setItem('birthDateStatus', date_birthday.result.status)
         }

@@ -153,8 +153,6 @@ export const useRequestModel = (backUrl: string) =>{
                 return res;
             })
             Cookies.set('Bearer', response.data.token, {expires : 21});
-
-            console.log(token)
             addUser()
             if (intervalId) {
                 clearInterval(intervalId)

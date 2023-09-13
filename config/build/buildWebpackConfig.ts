@@ -18,10 +18,10 @@ export function buildWebpackConfig(options: BuildOptions): webpack.Configuration
             libraryTarget: "umd",
             clean: true
         },
-        externals: {
-            react: "react",
-            "react-dom": "react-dom",
-        },
+        // externals: {
+        //     react: "react",
+        //     "react-dom": "react-dom",
+        // },
         plugins: buildPlugins(options),
         module: {
             rules: buildLoaders(options),

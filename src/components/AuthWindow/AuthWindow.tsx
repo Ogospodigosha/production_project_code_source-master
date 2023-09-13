@@ -21,7 +21,6 @@ const AuthWindow: FC<PropsType> = ({setIsUnmount, getTimer, authTypeProps, isAut
     const isDesktop = useConfig(state => state.isDesktop)
     const setViewModal = useAuthWindow(state => state.setViewModal)
     const view = useAuthWindow(state => state.view)
-    console.log(view)
     return (
         <>
             <div className={view ? 'modal-container': 'modal-container close'} style = {location.pathname.includes('/pdf') ? {display:"none"} : undefined}>

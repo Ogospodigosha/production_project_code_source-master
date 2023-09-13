@@ -22,7 +22,7 @@ export interface useAuthWindowStateType {
 
 const useAuthWindow = create(immer<useAuthWindowStateType>((set) => ({
     type: 'BASIC_SMS',
-    view: false,
+    view: true,
     href: undefined,
     withSms: false,
     name: undefined,
