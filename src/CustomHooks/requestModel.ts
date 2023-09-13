@@ -44,7 +44,7 @@ export const useRequestModel = (backUrl: string) =>{
     const signInMobileIdFromModel = async (phone: string, brithDate: string) =>{
         try {
             await mobileID({phone, birthday: brithDate}) // partner: 'mts'
-            setSmsLoader(true)
+            await setSmsLoader(true)
             setPhoneNumber(phone)
             setAuthType('MTS_ID')
             document.getElementById('codeConfirm')?.focus()

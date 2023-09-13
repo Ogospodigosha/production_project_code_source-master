@@ -22,7 +22,7 @@ const AuthWindowInner: FC<PropsType> = ({authTypeProps, backUrl}) => {
     let birthDateStatus =  unmaskedPhoneNumber.length===11 && date_birthday.length===10 ? true: undefined
     let KEY_PHONE_NUMBER = localStorage.getItem('phoneNumberFromState') || ''
     const modal = useModal(authTypeProps, backUrl)
-
+    console.log(loader)
     const labelTextAuth = !!authTypeProps
         ? 'Вам поступит смс в формате "1234" - Ваш одноразовый код, не сообщайте его никому\nВведите код подтверждения из смс'
         : 'Введите код подтверждения из СМС';
@@ -93,7 +93,7 @@ const AuthWindowInner: FC<PropsType> = ({authTypeProps, backUrl}) => {
                 defaultValue={ localStorage.getItem('phoneNumber')? localStorage.getItem('phoneNumber'): ''}
                 animationEffect={'fade-up'}
                 onChange={phoneChangeHandler}
-                readOnly={false}
+                readOnly={loader}
                 errorMessage={modal.valid.message}
                 status={setInputStatus(modal.valid)}
                 required={modal.valid.required}
